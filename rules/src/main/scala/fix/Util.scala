@@ -91,11 +91,11 @@ object Util {
 
     // Simply recurses through the parent hierarchy to find the parent we're looking for.
     def inheritsFromInner(child: Symbol, parent: String): Boolean = {
-      SymbolMatcher.normalized(parent).matches(child) ||
-        (child.info match {
+      SymbolMatcher.normalized(parent).matches(child) || // We found a match a this step
+        (child.info match { // Or we recurse
           case Some(info) =>
             info.signature match {
-              case ClassSignature(_, parents, _, _) =>
+              case ClassSignature(_, parents, _, _) => // Extract parents and recurse
                 parents.collect { case t: TypeRef => t.symbol }.exists(inheritsFromInner(_, parent))
               case _ => false
             }
