@@ -13,3 +13,4 @@ fix.OptionGet
 fix.OptionSize
 fix.StripMarginOnRegex
 fix.TryGet
+fix.UnsafeTraversableMethods

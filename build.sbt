@@ -18,7 +18,7 @@ inThisBuild(
   )
 )
 
-lazy val `popstellar` = (project in file("."))
+lazy val `scapegoat-scalafix` = (project in file("."))
   .aggregate(
     rules.projectRefs ++
       input.projectRefs ++

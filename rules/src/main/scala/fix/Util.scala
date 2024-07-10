@@ -2,6 +2,7 @@ package fix
 
 import scalafix.v1._
 
+import scala.annotation.tailrec
 import scala.meta._
 
 /** Utilities class for linter */
@@ -47,7 +48,7 @@ object Util {
   def findDefinition(tree: Tree, name: Term): Any = {
     tree.collect {
       case Defn.Val(_, List(Pat.Var(varName)), _, value)
-        if varName.value.equals(name.toString) => value
+        if varName.value == name.toString => value
       case Defn.Var.After_4_7_2(_, List(Pat.Var(varName)), _, value)
         if varName == name => value
     }.headOption.orNull
@@ -78,4 +79,66 @@ object Util {
   def findDefinitionsOrdered(tree: Tree, nameSet: List[Term]): List[Any] = {
     findDefinitions(tree, nameSet.toSet).sortBy { case (term, _) => nameSet.indexOf(term) }.map { case (_, value) => value }
   }
+
+  /**
+   * Check if a symbol inherits from a parent type
+   * @param child The symbol to check
+   * @param parent The parent type to check for
+   * @param doc The document to get the semantic information from
+   * @return Whether or not the symbol inherits from the parent type
+   */
+  def inheritsFrom(child: Term, parent: String)(implicit doc: SemanticDocument): Boolean = {
+
+    // Simply recurses through the parent hierarchy to find the parent we're looking for.
+    def inheritsFromInner(child: Symbol, parent: String): Boolean = {
+      SymbolMatcher.normalized(parent).matches(child) ||
+        (child.info match {
+          case Some(info) =>
+            info.signature match {
+              case ClassSignature(_, parents, _, _) =>
+                parents.collect { case t: TypeRef => t.symbol }.exists(inheritsFromInner(_, parent))
+              case _ => false
+            }
+          case None => false
+        })
+    }
+
+    // Function that finds the actual symbol of a term. There are cases where we are treating the companion object, e.g.
+    // a call to List(1,2,3).head will be on the companion object. It turns out that the Companion object does not
+    // inherit from the same parents as the class itself, so we need to resolve the symbol to class symbol.
+    // Companion objects generally inherit from AnyRef *and* a class that has as type parameter the class that we're
+    // interested in. e.g. the object List inherits from StrictOptimizedSeqFactory[List], or the object Seq inherits
+    // from Delegate[Seq].
+    // We say "generally" here since Scalameta simply does not guarantee that the hierarchy will be the same as in the
+    // code. For some reason, Seq does not inherit from AnyRef in Scalameta, even though it does in the code.
+    // Companion objects are differentiable from lists by their symbol, since they are not stored in a variable, they
+    // won't have a ValueSignature i.e. getSymbol will return None. They instead have a MethodSignature, from which
+    // we can extract the return type (i.e. the companion object itself), the parents and the type parameters.
+    // The method works as follows: we first get the symbol of the term. If it is a companion object, we get the parents
+    // of the companion object. We then find a parent that is not AnyRef, and get the type parameter of that parent.
+    // This will give us the class.
+    // If it directly the class, getType will not return None but the class itself and we don't have to do anything.
+    def resolveSymbol(child: Term): Symbol = {
+      getType(child) match {
+        case Symbol.None =>
+          child.symbol.info.flatMap(x =>
+            x.signature match {
+              case MethodSignature(_, _, SingleType(_, symbol)) => // Companion object, extract method signature
+                symbol.info.flatMap(x => x.signature match {
+                  case ClassSignature(_, parents, _, _) => // Extract class signature from return type
+                    parents.find(_.toString != "AnyRef").collect { // Find parent that is not AnyRef
+                      case TypeRef(_, _, List(typeArg: TypeRef)) => typeArg.symbol // Extract type parameter, i.e. class
+                    }
+                  case _ => None
+                })
+              case _ => None
+            }
+          ).getOrElse(Symbol.None)
+        case symbol => symbol // Class, do nothing
+      }
+    }
+
+    inheritsFromInner(resolveSymbol(child), parent)
+  }
+
 }
