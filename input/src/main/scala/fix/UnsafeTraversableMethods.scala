@@ -61,6 +61,9 @@ object UnsafeTraversableMethods {
     Vector(1, 2, 3).head // assert: UnsafeTraversableMethods
     Iterable(1, 2, 3).head // assert: UnsafeTraversableMethods
 
+    List((1,2)).head._1 // assert: UnsafeTraversableMethods
+
+    class F(args:String*) // scalafix: ok;
   }
 
 

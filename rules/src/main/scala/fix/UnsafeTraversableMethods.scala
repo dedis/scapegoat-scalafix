@@ -5,12 +5,12 @@ package fix
 
 import scalafix.lint.LintSeverity
 import scalafix.v1._
-
+import scalafix.util._
 import scala.meta._
 
 class UnsafeTraversableMethods extends SemanticRule("UnsafeTraversableMethods") {
 
-  private def diag(pos: Position) = Diagnostic("", "Array passed to format / interpolate string", pos, "An Array passed to String.format or interpolated string might result in an incorrect formatting", LintSeverity.Error)
+  private def diag(pos: Position) = Diagnostic("", "Use of unsafe traversable methods", pos, "The following methods on Traversable are considered to be unsafe (head, tail, init, last, reduce, reduceLeft, reduceRight, max, maxBy, min, minBy).", LintSeverity.Error)
 
   private val unsafeMethods = Set(
     "head",
@@ -27,7 +27,6 @@ class UnsafeTraversableMethods extends SemanticRule("UnsafeTraversableMethods") 
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
-
     doc.tree.collect {
       case Term.Select(qual @ Term.Name(_), Term.Name(str)) if unsafeMethods.contains(str)
         && Util.inheritsFrom(qual, "scala/collection/Iterable#") => Patch.lint(diag(qual.pos))

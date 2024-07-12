@@ -87,22 +87,31 @@ object Util {
    * @param doc The document to get the semantic information from
    * @return Whether or not the symbol inherits from the parent type
    */
+  // Simply recurses through the parent hierarchy to find the parent we're looking for.
+  def inheritsFrom(child: Symbol, parent: String)(implicit doc: SemanticDocument): Boolean = {
+    SymbolMatcher.normalized(parent).matches(child) || // We found a match a this step
+      (child.info match { // Or we recurse
+        case Some(info) =>
+          info.signature match {
+            case ClassSignature(_, parents, _, _) => // Extract parents and recurse
+              parents.collect { case t: TypeRef => t.symbol }.exists(inheritsFrom(_, parent))
+            case TypeSignature(_, _, TypeRef(_, symbol, _)) => // Recurse on upper bound
+              inheritsFrom(symbol, parent)
+            case _ => false
+          }
+        case None => false
+      })
+  }
+
+  /**
+   * Check if a term inherits from a parent type
+   * @param child The term to check
+   * @param parent The parent type to check for
+   * @param doc The document to get the semantic information from
+   * @return Whether or not the term inherits from the parent type
+   */
+  // Alternative which automatically resolves the symbol of the child
   def inheritsFrom(child: Term, parent: String)(implicit doc: SemanticDocument): Boolean = {
-
-    // Simply recurses through the parent hierarchy to find the parent we're looking for.
-    def inheritsFromInner(child: Symbol, parent: String): Boolean = {
-      SymbolMatcher.normalized(parent).matches(child) || // We found a match a this step
-        (child.info match { // Or we recurse
-          case Some(info) =>
-            info.signature match {
-              case ClassSignature(_, parents, _, _) => // Extract parents and recurse
-                parents.collect { case t: TypeRef => t.symbol }.exists(inheritsFromInner(_, parent))
-              case _ => false
-            }
-          case None => false
-        })
-    }
-
     // Function that finds the actual symbol of a term. There are cases where we are treating the companion object, e.g.
     // a call to List(1,2,3).head will be on the companion object. It turns out that the Companion object does not
     // inherit from the same parents as the class itself, so we need to resolve the symbol to class symbol.
@@ -138,7 +147,35 @@ object Util {
       }
     }
 
-    inheritsFromInner(resolveSymbol(child), parent)
+    inheritsFrom(resolveSymbol(child), parent)
+  }
+
+  def getTypeArgs(term: Term)(implicit doc: SemanticDocument): List[Symbol] = {
+    term.symbol.info match {
+      case Some(symInfo) => symInfo.signature match {
+        case ValueSignature(TypeRef(_, _, typeArguments)) => typeArguments.collect { case t: TypeRef => t.symbol }
+        case _ => List()
+      }
+      case _ => List()
+    }
+  }
+
+  def litToSymbol(lit: Lit): Symbol = {
+    lit match {
+      case Lit.String(_) => Symbol("scala/Predef.String#")
+      case Lit.Int(_) => Symbol("scala/Int#")
+      case Lit.Double(_) => Symbol("scala/Double#")
+      case Lit.Float(_) => Symbol("scala/Float#")
+      case Lit.Long(_) => Symbol("scala/Long#")
+      case Lit.Boolean(_) => Symbol("scala/Boolean#")
+      case Lit.Null() => Symbol("scala/Null#")
+      case Lit.Unit() => Symbol("scala/Unit#")
+      case Lit.Byte(_) => Symbol("scala/Byte#")
+      case Lit.Short(_) => Symbol("scala/Short#")
+      case Lit.Char(_) => Symbol("scala/Char#")
+      case Lit.Symbol(_) => Symbol("scala/Symbol#")
+      case _ => Symbol.None
+    }
   }
 
 }
