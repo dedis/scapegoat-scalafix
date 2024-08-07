@@ -5,9 +5,27 @@ package fix
 
 object UnsafeContains {
   def test() = {
+
+//    List(1,2,3).contains("olivia") // assert: UnsafeContains SCALA 3 only
+
+
     val l = List(1, 2, 3)
+
     l.contains(2) // scalafix: ok;
-    l.contains("olivia") // assert: UnsafeContains
+
+    l contains "olivia" // assert: UnsafeContains
+
+    l.contains(4) // scalafix: ok;
+
+    val l2 = List("olivia")
+
+    l2.contains(2) // assert: UnsafeContains
+
+    l2.contains("olivia") // scalafix: ok;
+
+
+
+    l.contains(2.1) // assert: UnsafeContains
 
     val s1 = Seq(2,3,4)
     s1.contains(3) // scalafix: ok;
