@@ -22,7 +22,7 @@ class CatchFatal extends SemanticRule("CatchFatal") {
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
-      // Corresponds to try { ... } catch { case e: NullPointerException => ... }, may have multiple catches
+      // Corresponds to try { ... } catch { case e: VirtualMachineError => ... }, may have multiple catches, and can be any exception in the set above (i.e. not just VirtualMachineError)
       case Term.Try(_, catches, _) => catches.collect {
           case Case(pat, _, _) => pat match {
               case Pat.Typed(_, Type.Name(exception)) if fatalExceptions.contains(exception) => Patch.lint(diag(pat.pos))

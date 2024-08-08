@@ -20,7 +20,7 @@ class CatchExceptionImmediatelyRethrown extends SemanticRule("CatchExceptionImme
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
-      // Corresponds to try { ... } catch { case e: Exception => ... }, may have multiple catches
+      // Corresponds to try { ... } catch { case e: Exception => throw e }, may have multiple catches
       case Term.Try(_, catches, _) => catches.collect {
           case c @ Case(Pat.Typed(Pat.Var(Term.Name(a)), _), _, Term.Throw(Term.Name(b))) if a == b => Patch.lint(diag(c.pos))
           case _                                                                                    => Patch.empty
