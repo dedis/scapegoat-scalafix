@@ -14,11 +14,11 @@ class CatchNpe extends SemanticRule("CatchNpe") {
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
-      // Corresponds to try { ... } catch { case e: NullPointerException => ... }
+      // Corresponds to try { ... } catch { case e: NullPointerException => ... }, may have multiple catches
       case Term.Try(_, catches, _) => catches.collect {
           case Case(pat, _, _) => pat match {
-              case Pat.Typed(_, tpe) if tpe.toString().equals("NullPointerException") => Patch.lint(diag(pat.pos))
-              case _                                                                  => Patch.empty
+              case Pat.Typed(_, Type.Name("NullPointerException")) => Patch.lint(diag(pat.pos))
+              case _ => Patch.empty
             }
         }
     }
