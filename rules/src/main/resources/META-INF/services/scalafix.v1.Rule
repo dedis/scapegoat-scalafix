@@ -19,3 +19,4 @@ fix.UnsafeStringContains
 fix.AvoidSizeEqualsZero
 fix.AvoidSizeNotEqualsZero
 fix.CatchException
+fix.CatchExceptionImmediatelyRethrown
