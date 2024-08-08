@@ -16,4 +16,3 @@ fix.TryGet
 fix.UnsafeTraversableMethods
 fix.UnsafeContains
 fix.UnsafeStringContains
-fix.ComparingUnrelatedTypes
