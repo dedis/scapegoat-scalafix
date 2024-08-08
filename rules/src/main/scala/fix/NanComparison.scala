@@ -1,6 +1,6 @@
 /*
 rule = NanComparison
-*/
+ */
 package fix
 
 import scalafix.lint.LintSeverity
@@ -19,18 +19,18 @@ class NanComparison extends SemanticRule("NanComparison") {
       // but it doesn't matter since we do pattern matching
       (l, r) match {
         case (Term.Select(Term.Name("Double"), Term.Name("NaN")), _) | (_, Term.Select(Term.Name("Double"), Term.Name("NaN"))) => Patch.lint(diag(t.pos))
-        case _ => Patch.empty
+        case _                                                                                                                 => Patch.empty
       }
     }
 
     def rule(lhs: Term, rhs: Term, t: Term): Patch = {
-      (lhs,rhs) match {
+      (lhs, rhs) match {
         // Either we have a comparison between two variables (e.g. g == f) or a variable and a literal (e.g. g == Double.NaN)
         // In the former case, we must find the definitions of the variables to see if one of them is Double.NaN
         case (Term.Name(_), Term.Name(_)) => Util.findDefinitions(doc.tree, Set(lhs, rhs)) match {
-          case List((_, ld), (_, rd)) => matcher(ld, rd, t)
-          case _ => Patch.empty
-        }
+            case List((_, ld), (_, rd)) => matcher(ld, rd, t)
+            case _                      => Patch.empty
+          }
         // In the latter case, we can directly match the terms
         case _ => matcher(lhs, rhs, t)
       }

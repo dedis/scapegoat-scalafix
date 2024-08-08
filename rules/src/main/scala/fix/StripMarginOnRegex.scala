@@ -1,6 +1,6 @@
 /*
 rule = StripMarginOnRegex
-*/
+ */
 package fix
 
 import scalafix.lint.LintSeverity
@@ -17,11 +17,11 @@ class StripMarginOnRegex extends SemanticRule("StripMarginOnRegex") {
       case t @ Term.Select(Term.Select(qual, Term.Name("stripMargin")), Term.Name("r")) =>
         qual match {
           case name @ Term.Name(_) => Util.findDefinition(doc.tree, name) match {
-            case Lit.String(value) if value.contains('|') => Patch.lint(diag(t.pos))
-            case _ => Patch.empty
-          }
+              case Lit.String(value) if value.contains('|') => Patch.lint(diag(t.pos))
+              case _                                        => Patch.empty
+            }
           case Lit.String(value) if value.contains('|') => Patch.lint(diag(t.pos))
-          case _ => Patch.empty
+          case _                                        => Patch.empty
         }
       case _ => Patch.empty
     }.asPatch

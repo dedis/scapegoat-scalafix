@@ -18,7 +18,7 @@ class CatchException extends SemanticRule("CatchException") {
       case Term.Try(_, catches, _) => catches.collect {
           case Case(pat, _, _) => pat match {
               case Pat.Typed(_, Type.Name("Exception")) => Patch.lint(diag(pat.pos))
-              case _ => Patch.empty
+              case _                                    => Patch.empty
             }
         }
     }

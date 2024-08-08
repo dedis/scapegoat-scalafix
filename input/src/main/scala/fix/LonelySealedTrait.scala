@@ -57,12 +57,12 @@ object LonelySealedTrait {
   }
 
   case class MappingCharFilter(name: String, mappings: (String, String)*)
-    extends CharFilterDefinition {
+      extends CharFilterDefinition {
     val filterType = "mapping"
   }
 
   case class PatternReplaceCharFilter(name: String, pattern: String, replacement: String)
-    extends CharFilterDefinition {
+      extends CharFilterDefinition {
     val filterType = "pattern_replace"
   }
 
@@ -101,6 +101,5 @@ object LonelySealedTrait {
   sealed trait K extends J
   sealed class L extends K
   object L1 extends L
-
 
 }

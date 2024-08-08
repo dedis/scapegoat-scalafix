@@ -1,6 +1,6 @@
 /*
 rule = OptionSize
-*/
+ */
 package fix
 
 import scalafix.lint.LintSeverity
@@ -15,7 +15,7 @@ class OptionSize extends SemanticRule("OptionSize") {
     doc.tree.collect {
       // Corresponds to Option(_).size or o.size
       case t @ Term.Select(qual, Term.Name("size")) if Util.matchType(qual, "scala/Option") => Patch.lint(diag(t.pos))
-      case _ => Patch.empty
+      case _                                                                                => Patch.empty
     }.asPatch
   }
 }

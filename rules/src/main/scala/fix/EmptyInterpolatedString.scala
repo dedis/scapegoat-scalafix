@@ -10,7 +10,13 @@ import scalafix.v1._
 
 class EmptyInterpolatedString extends SemanticRule("EmptyInterpolatedString") {
 
-  private def diag(pos: Position) = Diagnostic("", "Empty interpolated / format string", pos, "String declared as interpolated but has no parameters or usage of String.format with no parameters can be turned into a regular string.", LintSeverity.Error)
+  private def diag(pos: Position) = Diagnostic(
+    "",
+    "Empty interpolated / format string",
+    pos,
+    "String declared as interpolated but has no parameters or usage of String.format with no parameters can be turned into a regular string.",
+    LintSeverity.Error
+  )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
@@ -19,7 +25,7 @@ class EmptyInterpolatedString extends SemanticRule("EmptyInterpolatedString") {
       // Corresponds to "str".format()
       case t @ Term.Apply.After_4_6_0(Term.Select(Lit.String(_) | Term.Name(_), Term.Name("format")), Term.ArgClause(Nil, _)) => Patch.lint(diag(t.pos))
       // Corresponds to f"str" and s"str"
-      case t @ Term.Interpolate(_, _, Nil)                                                                         => Patch.lint(diag(t.pos))
+      case t @ Term.Interpolate(_, _, Nil) => Patch.lint(diag(t.pos))
     }.asPatch
   }
 }

@@ -10,12 +10,18 @@ import scalafix.v1._
 
 class ArraysInFormat extends SemanticRule("ArraysInFormat") {
 
-  private def diag(pos: Position) = Diagnostic("", "Array passed to format / interpolate string", pos, "An Array passed to String.format or interpolated string might result in an incorrect formatting", LintSeverity.Error)
+  private def diag(pos: Position) = Diagnostic(
+    "",
+    "Array passed to format / interpolate string",
+    pos,
+    "An Array passed to String.format or interpolated string might result in an incorrect formatting",
+    LintSeverity.Error
+  )
 
   def rule(args: List[Stat])(implicit doc: SemanticDocument): Patch = {
     args.collect {
       case a if Util.matchType(a, "scala/Array", "scala/Array.empty") => Patch.lint(diag(a.pos))
-      case _ => Patch.empty
+      case _                                                          => Patch.empty
     }.asPatch
   }
 
@@ -26,7 +32,7 @@ class ArraysInFormat extends SemanticRule("ArraysInFormat") {
       // Corresponds to f"str $args" and s"str $args"
       // Args in Term.Interpolate come in Term.Block requiring to extract the stats
       case Term.Interpolate(_, _, args) => args.collect { case Term.Block(stats) => rule(stats) }.asPatch
-      case _ => Patch.empty
+      case _                            => Patch.empty
     }.asPatch
   }
 

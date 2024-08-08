@@ -10,22 +10,28 @@ import scala.meta._
 
 class UnsafeContains extends SemanticRule("UnsafeContains") {
 
-  private def diag(pos: Position) = Diagnostic("", "Checks `Seq.contains()` and `Option.contains()` for unrelated types.", pos, "`contains()` method accepts arguments af any type, which means you might be checking if your collection contains an element of an unrelated type.", LintSeverity.Error)
+  private def diag(pos: Position) = Diagnostic(
+    "",
+    "Checks `Seq.contains()` and `Option.contains()` for unrelated types.",
+    pos,
+    "`contains()` method accepts arguments af any type, which means you might be checking if your collection contains an element of an unrelated type.",
+    LintSeverity.Error
+  )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
 
-    if(doc.synthetics.isEmpty) {
+    if (doc.synthetics.isEmpty) {
       /* Rule is not fully compatible with Scala 2.13 which doesn't collect synthetics. Since this linter is primarly focused
       on Scala 3, we accept this limitation. There are some edge cases that do not work, see below */
       def isSeqOrOption(term: Term): Boolean = Util.inheritsFrom(term, "scala/collection/Seq#") || Util.inheritsFrom(term, "scala/Option#")
 
-      def rule(qual: Term.Name, arg: Term): Patch ={
+      def rule(qual: Term.Name, arg: Term): Patch = {
         Util.getTypeArgs(qual).headOption match {
           case Some(typeArg) =>
             val argSymbol = arg match {
-              case l @ Lit(_) => Util.litToSymbol(l)
+              case l @ Lit(_)       => Util.litToSymbol(l)
               case t @ Term.Name(_) => Util.getType(t)
-              case _ => arg.symbol
+              case _                => arg.symbol
             }
             if (Util.inheritsFrom(argSymbol, typeArg.value)) Patch.empty
             else Patch.lint(diag(arg.pos))
@@ -35,20 +41,19 @@ class UnsafeContains extends SemanticRule("UnsafeContains") {
 
       doc.tree.collect {
         case Term.Apply.After_4_6_0(Term.Select(qual @ Term.Name(_), Term.Name("contains")), Term.ArgClause(arg :: Nil, _))
-          // Note: rule doesn't handle companion object case (e.g. List(1,2,3).contains("olivia")) which should trigger)
-          // This comes from the fact that there is currently no way to determine the type of a List built from the
-          // companion object with Scalameta semantic document as the return type will simply be list and no information
-          // about the type of the elements is stored, except in synthetics. However, Scala 2.13 doesn't collect
-          // synthetics and thus this rule is only partial.
-          if isSeqOrOption(qual) => rule(qual, arg)
+            // Note: rule doesn't handle companion object case (e.g. List(1,2,3).contains("olivia")) which should trigger)
+            // This comes from the fact that there is currently no way to determine the type of a List built from the
+            // companion object with Scalameta semantic document as the return type will simply be list and no information
+            // about the type of the elements is stored, except in synthetics. However, Scala 2.13 doesn't collect
+            // synthetics and thus this rule is only partial.
+            if isSeqOrOption(qual) => rule(qual, arg)
         case Term.ApplyInfix.After_4_6_0(qual @ Term.Name(_), Term.Name("contains"), _, Term.ArgClause(arg :: Nil, _))
-          if isSeqOrOption(qual) => rule(qual, arg)
+            if isSeqOrOption(qual) => rule(qual, arg)
         case _ => Patch.empty
       }.asPatch
 
     } else {
       val violationSet = scala.collection.mutable.Set[Position]()
-
 
       /* This rule works as follows: we look at the synthetics (which contain the information added by the compiler) which
       will notably give us the inferred type. If the type is a UnionType, we know that the contains method is called on an
@@ -70,20 +75,16 @@ class UnsafeContains extends SemanticRule("UnsafeContains") {
         case _ => ()
       }
 
-
       doc.tree.collect {
-        case Term.Apply.After_4_6_0(t @ Term.Select(_ @ Term.Name(_), Term.Name("contains")), Term.ArgClause(arg :: Nil, _))
-          if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
+        case Term.Apply.After_4_6_0(t @ Term.Select(_ @Term.Name(_), Term.Name("contains")), Term.ArgClause(arg :: Nil, _))
+            if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
         case t @ Term.ApplyInfix.After_4_6_0(Term.Name(_), Term.Name("contains"), _, Term.ArgClause(_ :: Nil, _))
-          if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
+            if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
         case Term.Apply.After_4_6_0(t @ Term.Select(_, Term.Name("contains")), Term.ArgClause(_ :: Nil, _)) if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
-        case _ => Patch.empty
+        case _                                                                                                                              => Patch.empty
       }.asPatch
 
     }
   }
-
-
-
 
 }

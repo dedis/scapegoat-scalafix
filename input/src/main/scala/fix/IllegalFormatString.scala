@@ -33,6 +33,5 @@ object IllegalFormatString {
 
     "%s is %d years old, %d".format(name, age, 145) // scalafix: ok;
 
-
   }
 }

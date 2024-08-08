@@ -10,7 +10,13 @@ import scalafix.v1._
 
 class IncorrectlyNamedExceptions extends SemanticRule("IncorrectlyNamedExceptions") {
 
-  private def diag(pos: Position) = Diagnostic("", "Incorrectly named exceptions", pos, "Class named exception does not derive from Exception / class derived from Exception is not named *Exception.", LintSeverity.Error)
+  private def diag(pos: Position) = Diagnostic(
+    "",
+    "Incorrectly named exceptions",
+    pos,
+    "Class named exception does not derive from Exception / class derived from Exception is not named *Exception.",
+    LintSeverity.Error
+  )
 
   // Helper function to check if a class inherits from Exception, going through the ancestors
   private def inheritsFromException(symbol: Symbol)(implicit doc: SemanticDocument): Boolean = {
@@ -19,13 +25,13 @@ class IncorrectlyNamedExceptions extends SemanticRule("IncorrectlyNamedException
         // Check if the current type contains an Exception in its name
         info.signature match {
           case ClassSignature(_, _, _, _) if info.displayName.contains("Exception") => true
-          case ClassSignature(_, parents, _, _) =>
+          case ClassSignature(_, parents, _, _)                                     =>
             // Recursively check parent types
             parents.map(_.asInstanceOf[TypeRef].symbol).exists(inheritsFromException(_))
-         case TypeSignature(_, TypeRef(_, symbol1, _), TypeRef(_, symbol2, _)) =>
-           // Check if inherits java.lang.Exception
-           val matcher = SymbolMatcher.exact("java/lang/Exception#")
-           matcher.matches(symbol1) || matcher.matches(symbol2)
+          case TypeSignature(_, TypeRef(_, symbol1, _), TypeRef(_, symbol2, _)) =>
+            // Check if inherits java.lang.Exception
+            val matcher = SymbolMatcher.exact("java/lang/Exception#")
+            matcher.matches(symbol1) || matcher.matches(symbol2)
           case _ => false
         }
       case None => false

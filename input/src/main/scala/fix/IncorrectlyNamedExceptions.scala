@@ -22,4 +22,3 @@ object IncorrectlyNamedExceptions {
   class IsRuntime extends Exception // assert: IncorrectlyNamedExceptions
 
 }
-

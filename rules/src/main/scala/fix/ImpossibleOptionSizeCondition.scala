@@ -16,13 +16,12 @@ class ImpossibleOptionSizeCondition extends SemanticRule("ImpossibleOptionSizeCo
 
     doc.tree.collect {
       // Corresponds to Option(_).size > 1 or Option(_).size >= 1, or o.size > 1 or o.size >= 1 with o a variable
-      case t @ Term.ApplyInfix.After_4_6_0(Term.Select(qual, Term.Name("size")), Term.Name(">") | Term.Name(">="),
-      _, Term.ArgClause(List(comparedValue), _))
-        if Util.matchType(qual, "scala/Option", "scala/Some") =>
+      case t @ Term.ApplyInfix.After_4_6_0(Term.Select(qual, Term.Name("size")), Term.Name(">") | Term.Name(">="), _, Term.ArgClause(List(comparedValue), _))
+          if Util.matchType(qual, "scala/Option", "scala/Some") =>
         // We then check if the value is greater than or equal to 1 and if so, we lint
         comparedValue match {
           case Lit.Int(actualValue) if actualValue >= 1 => Patch.lint(diag(t.pos))
-          case _          => Patch.empty
+          case _                                        => Patch.empty
         }
       case _ => Patch.empty
     }
