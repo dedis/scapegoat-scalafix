@@ -20,3 +20,4 @@ fix.AvoidSizeEqualsZero
 fix.AvoidSizeNotEqualsZero
 fix.CatchException
 fix.CatchExceptionImmediatelyRethrown
+fix.CatchFatal
