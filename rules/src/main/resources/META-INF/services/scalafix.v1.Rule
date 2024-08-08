@@ -21,3 +21,4 @@ fix.AvoidSizeNotEqualsZero
 fix.CatchException
 fix.CatchExceptionImmediatelyRethrown
 fix.CatchFatal
+fix.CatchThrowable
