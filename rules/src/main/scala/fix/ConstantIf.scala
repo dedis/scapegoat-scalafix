@@ -15,7 +15,7 @@ class ConstantIf extends SemanticRule("ConstantIf") {
     "Checks for code where the if condition compiles to a constant.",
     pos,
     "An if condition which gets compiled to a constant, like e.g. if (1 < 2) or if (false) doesn't add any value and should be avoided.",
-    LintSeverity.Error
+    LintSeverity.Warning
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
