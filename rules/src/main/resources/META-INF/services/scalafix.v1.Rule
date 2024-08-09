@@ -28,3 +28,5 @@ fix.CollectionPromotionToAny
 fix.ComparisonWithSelf
 fix.ConstantIf
 fix.DuplicateImport
+fix.EmptyFor
+fix.EmptyIfBlock
