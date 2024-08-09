@@ -15,7 +15,7 @@ class CollectionNegativeIndex extends SemanticRule("CollectionNegativeIndex") {
     "Checks for negative access on a sequence, e.g. list.get(-1).",
     pos,
     "Trying to access Seq elements using a negative index will result in an IndexOutOfBoundsException.",
-    LintSeverity.Error
+    LintSeverity.Warning
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {

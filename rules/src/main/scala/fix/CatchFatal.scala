@@ -15,7 +15,7 @@ class CatchFatal extends SemanticRule("CatchFatal") {
     "Checks for try blocks that catch fatal exceptions: VirtualMachineError, ThreadDeath, InterruptedException, LinkageError, ControlThrowable.",
     pos,
     "Did you intend to catch a fatal exception? Consider using scala.util.control.NonFatal instead.",
-    LintSeverity.Error
+    LintSeverity.Warning
   )
 
   private val fatalExceptions = Set("VirtualMachineError", "ThreadDeath", "InterruptedException", "LinkageError", "ControlThrowable")

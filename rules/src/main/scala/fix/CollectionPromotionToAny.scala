@@ -15,7 +15,7 @@ class CollectionPromotionToAny extends SemanticRule("CollectionPromotionToAny") 
     "Checks for collection operations that promote the collection to Any.",
     pos,
     "The `:+` (append) operator on collections accepts any argument you give it, which means that you can end up with e.g. `Seq[Any]` if your types don't match.",
-    LintSeverity.Error
+    LintSeverity.Warning
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {

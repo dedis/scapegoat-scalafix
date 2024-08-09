@@ -15,7 +15,7 @@ class CatchThrowable extends SemanticRule("CatchThrowable") {
     "Checks for try blocks that catch Throwable..",
     pos,
     "Did you intend to catch all throwables? Consider catching a more specific exception class.",
-    LintSeverity.Error
+    LintSeverity.Warning
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {

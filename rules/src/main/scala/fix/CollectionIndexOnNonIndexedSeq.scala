@@ -15,7 +15,7 @@ class CollectionIndexOnNonIndexedSeq extends SemanticRule("CollectionIndexOnNonI
     "Checks for indexing on a Seq which is not an IndexedSeq.",
     pos,
     "Using an index to access elements of an IndexedSeq may cause performance problems",
-    LintSeverity.Error
+    LintSeverity.Warning
   )
   override def fix(implicit doc: SemanticDocument): Patch = {
 
