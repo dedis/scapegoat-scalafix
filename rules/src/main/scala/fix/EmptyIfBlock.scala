@@ -34,7 +34,7 @@ class EmptyIfBlock extends SemanticRule("EmptyIfBlock") {
       // because it doesn't matter if it has a body or not
       case Term.Function.After_4_6_0(_, Term.Block(List(t @ Term.If.After_4_4_0(_, _, _, _)))) => functionsWithEmptyIfsSet.add(t.pos); Patch.empty
       // Corresponds to if ( condition ) { } or if ( condition ) { () }
-      case t@Term.If.After_4_4_0(_, Term.Block(Nil | List(Lit.Unit())), _, _) if !functionsWithEmptyIfsSet.contains(t.pos) => Patch.lint(diag(t.pos))
+      case t @ Term.If.After_4_4_0(_, Term.Block(Nil | List(Lit.Unit())), _, _) if !functionsWithEmptyIfsSet.contains(t.pos) => Patch.lint(diag(t.pos))
 
       case _ => Patch.empty
     }.asPatch
