@@ -28,9 +28,9 @@ class LonelySealedTrait extends SemanticRule("LonelySealedTrait") {
   }
 
   override def fix(implicit doc: SemanticDocument): Patch = {
-    val sealedTraits = mutable.Map[String, Defn]() // Map to store the Defn and position the warning correctly
-    val parents = mutable.Set[String]()
-    val sealedTraitsHierarchy = mutable.Map[String, Set[String]]()
+    val sealedTraits = mutable.HashMap[String, Defn]() // Map to store the Defn and position the warning correctly
+    val parents = mutable.HashSet[String]()
+    val sealedTraitsHierarchy = mutable.HashMap[String, Set[String]]()
 
     // Use display name to handle the case A[B] where A is a trait and B is a type parameter
     def prettyInits(inits: List[Init]): List[String] = inits.collect { case i if i.symbol.info.isDefined => i.symbol.info.get.displayName }
