@@ -27,3 +27,4 @@ fix.CollectionNegativeIndex
 fix.CollectionPromotionToAny
 fix.ComparisonWithSelf
 fix.ConstantIf
+fix.DuplicateImport
