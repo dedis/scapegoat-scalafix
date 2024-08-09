@@ -21,8 +21,12 @@ class ConstantIf extends SemanticRule("ConstantIf") {
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
       case t @ Term.If.After_4_4_0(
-      // Corresponds to if(true) / if(false) OR (| symbol) if(1 < 2) / if(2 < 1) or any comparison between literals which is necessarily constant.
-        Lit.Boolean(_) | Term.ApplyInfix.After_4_6_0(Lit(_), _, _, Term.ArgClause(List(Lit(_)), _)), _, _, _) => Patch.lint(diag(t.pos))
+            // Corresponds to if(true) / if(false) OR (| symbol) if(1 < 2) / if(2 < 1) or any comparison between literals which is necessarily constant.
+            Lit.Boolean(_) | Term.ApplyInfix.After_4_6_0(Lit(_), _, _, Term.ArgClause(List(Lit(_)), _)),
+            _,
+            _,
+            _
+          ) => Patch.lint(diag(t.pos))
     }.asPatch
   }
 }

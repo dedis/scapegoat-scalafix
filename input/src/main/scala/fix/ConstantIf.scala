@@ -21,6 +21,6 @@ object ConstantIf {
     val b = 5
     if (a < b) println("scooby") // scalafix: ok;
 
-    while ( true ) { println("sam") } // scalafix: ok;
+    while (true) { println("sam") } // scalafix: ok;
   }
 }
