@@ -76,7 +76,7 @@ class UnsafeContains extends SemanticRule("UnsafeContains") {
       }
 
       doc.tree.collect {
-        case Term.Apply.After_4_6_0(t @ Term.Select(_ @Term.Name(_), Term.Name("contains")), Term.ArgClause(arg :: Nil, _))
+        case Term.Apply.After_4_6_0(t @ Term.Select(_ @Term.Name(_), Term.Name("contains")), Term.ArgClause(_ :: Nil, _))
             if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
         case t @ Term.ApplyInfix.After_4_6_0(Term.Name(_), Term.Name("contains"), _, Term.ArgClause(_ :: Nil, _))
             if violationSet.contains(t.pos) => Patch.lint(diag(t.pos))
