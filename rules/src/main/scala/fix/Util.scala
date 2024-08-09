@@ -191,8 +191,11 @@ object Util {
   def getTypeArgs(term: Term)(implicit doc: SemanticDocument): List[Symbol] = {
     term.symbol.info match {
       case Some(symInfo) => symInfo.signature match {
-          case ValueSignature(TypeRef(_, _, typeArguments)) => typeArguments.collect { case t: TypeRef => t.symbol }
-          case _                                            => List()
+          case ValueSignature(TypeRef(_, _, typeArguments)) => typeArguments.collect {
+              case t: TypeRef   => List(t.symbol)
+              case t: UnionType => t.types.collect { case t: TypeRef => t.symbol }
+            }.flatten
+          case _ => List()
         }
       case _ => List()
     }
@@ -200,7 +203,7 @@ object Util {
 
   def litToSymbol(lit: Lit): Symbol = {
     lit match {
-      case Lit.String(_)  => Symbol("scala/Predef.String#")
+      case Lit.String(_)  => Symbol("java/lang/String#")
       case Lit.Int(_)     => Symbol("scala/Int#")
       case Lit.Double(_)  => Symbol("scala/Double#")
       case Lit.Float(_)   => Symbol("scala/Float#")
