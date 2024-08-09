@@ -5,7 +5,7 @@ package fix
 
 object ComparisonWithSelf {
 
-  def test() = {
+  def test(): Unit = {
     val c = false
     val b = true
     if (b == b) { // assert: ComparisonWithSelf

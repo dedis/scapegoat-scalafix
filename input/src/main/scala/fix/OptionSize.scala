@@ -4,7 +4,7 @@ rule = OptionSize
 package fix
 
 object OptionSize {
-  def test() = {
+  def test(): Unit = {
     val o = Option("olivia")
     o.size // assert: OptionSize
 

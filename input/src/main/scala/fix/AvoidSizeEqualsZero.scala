@@ -4,7 +4,7 @@ rule = AvoidSizeEqualsZero
 package fix
 
 object AvoidSizeEqualsZero {
-  def test() = {
+  def test(): Unit = {
     val isEmpty1 = List(1).size == 0 // assert: AvoidSizeEqualsZero
     val isEmpty2 = List(1).length == 0 // assert: AvoidSizeEqualsZero
     val isEmpty3 = Set(1).size == 0 // assert: AvoidSizeEqualsZero

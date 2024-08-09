@@ -6,7 +6,7 @@ package fix
 import scala.util.Try
 
 object TryGet {
-  def test() = {
+  def test(): Unit = {
     val o = Try { println("mojave") }
     o.get // assert: TryGet
 

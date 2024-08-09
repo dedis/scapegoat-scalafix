@@ -4,7 +4,7 @@ rule = CollectionPromotionToAny
 package fix
 
 object CollectionPromotionToAny {
-  def test() = {
+  def test(): Unit = {
     val a = List(1, 2, 3)
     val b = List(4, 5, 6)
     val c = a :+ b // assert: CollectionPromotionToAny

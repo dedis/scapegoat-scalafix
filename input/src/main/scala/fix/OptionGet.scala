@@ -4,7 +4,7 @@ rule = OptionGet
 package fix
 
 object OptionGet {
-  def test() = {
+  def test(): Unit = {
     val o = Option("olivia")
     o.get // assert: OptionGet
 

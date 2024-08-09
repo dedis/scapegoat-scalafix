@@ -4,7 +4,7 @@ rule = DuplicateImport
 package fix
 
 object DuplicateImport {
-  def test() = {
+  def test(): Unit = {
     import scala.concurrent.duration.TimeUnit
     import scala.concurrent.duration.TimeUnit // assert: DuplicateImport
 

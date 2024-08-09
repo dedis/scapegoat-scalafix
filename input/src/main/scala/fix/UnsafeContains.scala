@@ -4,7 +4,7 @@ rule = UnsafeContains
 package fix
 
 object UnsafeContains {
-  def test() = {
+  def test(): Unit = {
 
 //    List(1,2,3).contains("olivia") // assert: UnsafeContains SCALA 3 only
 

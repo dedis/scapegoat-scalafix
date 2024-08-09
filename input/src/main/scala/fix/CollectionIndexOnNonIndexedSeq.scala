@@ -4,7 +4,7 @@ rule = CollectionIndexOnNonIndexedSeq
 package fix
 
 object CollectionIndexOnNonIndexedSeq {
-  def test() = {
+  def test(): Int = {
     val idx = 2
     List(1, 2, 3)(idx) // assert: CollectionIndexOnNonIndexedSeq
     Seq(1, 2, 3)(idx) // assert: CollectionIndexOnNonIndexedSeq

@@ -4,7 +4,7 @@ rule = ConstantIf
 package fix
 
 object ConstantIf {
-  def test() = {
+  def test(): Unit = {
     if (1 < 2) { // assert: ConstantIf
       println("sammy")
     }

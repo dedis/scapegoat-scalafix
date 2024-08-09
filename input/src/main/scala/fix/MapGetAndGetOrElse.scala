@@ -4,7 +4,7 @@ rule = MapGetAndGetOrElse
 package fix
 
 object MapGetAndGetOrElse {
-  def test() = {
+  def test(): Unit = {
     val numMap1 = Map(1 -> "one", 2 -> "two")
     numMap1.get(1).getOrElse("unknown") // assert: MapGetAndGetOrElse
 

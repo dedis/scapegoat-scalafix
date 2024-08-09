@@ -4,7 +4,7 @@ rule = UnsafeTraversableMethods
 package fix
 
 object UnsafeTraversableMethods {
-  def test() = {
+  def test(): Unit = {
     val l = List(1, 2, 3)
     l.head // assert: UnsafeTraversableMethods
     l.tail // assert: UnsafeTraversableMethods

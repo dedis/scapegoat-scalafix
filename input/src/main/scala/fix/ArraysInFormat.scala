@@ -4,7 +4,7 @@ rule = ArraysInFormat
 package fix
 
 object ArraysInFormat {
-  def test() = {
+  def test(): Unit = {
     val array = new Array[String](3)
     val str = f"Here are my cool elements ${array}" // assert: ArraysInFormat
     val str2 = s"Here are my cool elements ${array}" // assert: ArraysInFormat

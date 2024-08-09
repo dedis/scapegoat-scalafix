@@ -4,7 +4,7 @@ rule = UnsafeStringContains
 package fix
 
 object UnsafeStringContains {
-  def test() = {
+  def test(): Unit = {
     "abcdefgh".contains(2) // assert: UnsafeStringContains
     "abcdefgh".contains(2: Char) // scalafix: ok;
     "abcdefgh".contains(2.asInstanceOf[Char]) // scalafix: ok;

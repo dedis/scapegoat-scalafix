@@ -5,7 +5,7 @@ package fix
 
 object NanComparison {
 
-  def test() = {
+  def test(): Unit = {
     val d = 0.5d
     d == Double.NaN // assert: NanComparison
     Double.NaN == d // assert: NanComparison

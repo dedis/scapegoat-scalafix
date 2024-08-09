@@ -4,7 +4,7 @@ rule = IncorrectNumberOfArgsToFormat
 package fix
 
 object IncorrectNumberOfArgsToFormat {
-  def test() = {
+  def test(): Unit = {
     val name: String = "John"
     val age: Integer = 30
     val illegalFormatString1 = "%s is %d years old, %d"

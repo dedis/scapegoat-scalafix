@@ -4,7 +4,7 @@ rule = StripMarginOnRegex
 package fix
 
 object StripMarginOnRegex {
-  def test() = {
+  def test(): Unit = {
     val regex = "match|this".stripMargin.r // assert: StripMarginOnRegex
     val myRegex = "match|this"
     myRegex.stripMargin.r // assert: StripMarginOnRegex

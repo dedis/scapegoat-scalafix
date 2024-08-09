@@ -4,7 +4,7 @@ rule = ComparingFloatingTypes
 package fix
 
 object ComparingFloatingTypes {
-  def test(): Boolean = {
+  def test(): Unit = {
     val f1 = 1.46456f
     val f2 = 1.46456f
     if (f1 == f2) { // assert: ComparingFloatingTypes
