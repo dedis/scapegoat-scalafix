@@ -25,3 +25,4 @@ fix.CatchThrowable
 fix.CollectionIndexOnNonIndexedSeq
 fix.CollectionNegativeIndex
 fix.CollectionPromotionToAny
+fix.ComparisonWithSelf
