@@ -26,3 +26,4 @@ fix.CollectionIndexOnNonIndexedSeq
 fix.CollectionNegativeIndex
 fix.CollectionPromotionToAny
 fix.ComparisonWithSelf
+fix.ConstantIf
