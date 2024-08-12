@@ -30,3 +30,7 @@ fix.ConstantIf
 fix.DuplicateImport
 fix.EmptyFor
 fix.EmptyIfBlock
+fix.EmptyMethod
+fix.EmptySynchronized
+fix.EmptyTryBlock
+fix.EmptyWhileBlock
