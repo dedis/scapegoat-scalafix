@@ -34,3 +34,5 @@ fix.EmptyMethod
 fix.EmptySynchronized
 fix.EmptyTryBlock
 fix.EmptyWhileBlock
+fix.FinalizerWithoutSuper
+fix.LooksLikeInterpolatedString
