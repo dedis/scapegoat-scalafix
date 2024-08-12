@@ -25,12 +25,11 @@ class FinalizerWithoutSuper extends SemanticRule("FinalizerWithoutSuper") {
     doc.tree.collect {
       // Corresponds to override def finalize { ... }
       case t @ Defn.Def.After_4_6_0(_, Term.Name("finalize"), _, _, body)
-        // Checks if the body of the method does not contain super.finalize()
-        if !body.exists {
-          case Term.Apply.After_4_6_0(Term.Select(Term.Super(_, _), Term.Name("finalize")), Term.ArgClause(_, _)) => true
-          case _ => false
-        }
-      => Patch.lint(diag(t.pos))
+          // Checks if the body of the method does not contain super.finalize()
+          if !body.exists {
+            case Term.Apply.After_4_6_0(Term.Select(Term.Super(_, _), Term.Name("finalize")), Term.ArgClause(_, _)) => true
+            case _                                                                                                  => false
+          } => Patch.lint(diag(t.pos))
     }.asPatch
   }
 }

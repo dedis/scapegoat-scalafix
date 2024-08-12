@@ -31,5 +31,4 @@ object LooksLikeInterpolatedString {
 object Test {
   val a = "hello"
 
-
 }

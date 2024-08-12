@@ -6,7 +6,7 @@ package fix
 import scala.annotation.nowarn
 
 @nowarn
-object FinalizerWithoutSuper { //noinspection ScalaDeprecation
+object FinalizerWithoutSuper { // noinspection ScalaDeprecation
 
   class Test1 {
     override def finalize = {} // assert: FinalizerWithoutSuper

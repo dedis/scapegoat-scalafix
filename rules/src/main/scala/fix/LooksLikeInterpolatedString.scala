@@ -24,7 +24,7 @@ class LooksLikeInterpolatedString extends SemanticRule("LooksLikeInterpolatedStr
 
     def isInterpolate(arg: Tree): Boolean = arg match {
       case Term.Interpolate(_, _, _) => true
-      case _ => false
+      case _                         => false
     }
 
     doc.tree.collect {
