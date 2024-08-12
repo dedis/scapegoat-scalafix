@@ -34,7 +34,7 @@ class LooksLikeInterpolatedString extends SemanticRule("LooksLikeInterpolatedStr
       Then, or condition here (t.parent.isEmpty || !isInterpolate(t.parent.get)) is to avoid flagging interpolated strings
       We first check if there is no parent (i.e. it is a lonely string) and if it has one, we check if it is not an interpolation
       Because it could simply be a string contained in a Term.Interpolate. This also helps flagging escaped $ in strings */
-      case t @ Lit.String(str) if regexes.exists(r => r.findFirstIn(str).nonEmpty) && (t.parent.isEmpty || !isInterpolate(t.parent.get)) => Patch.lint(diag(t.pos))
+      case t @ Lit.String(str) if regexes.exists(r => r.findFirstIn(str).nonEmpty) && (t.parent.isEmpty || !t.parent.exists(isInterpolate)) => Patch.lint(diag(t.pos))
 
     }.asPatch
   }
