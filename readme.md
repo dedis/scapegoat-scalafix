@@ -39,7 +39,7 @@ inThisBuild(
 
 This is necessary to enable the SemanticDB, which is required for the rules to work. Only add these lines if SemanticDB is not already enabled in the `build.sbt`.
 
-## Rule list
+## Rule list (not up to date with latest commits)
 1. **ArraysInFormat**: Checks if arrays are used in the format method of a string.
 2. **CatchNpe**: Checks if a catch block catches a NullPointerException.
 3. **ComparingFloatingPointTypes**: Checks if floating point types (float or double) are compared with == or !=.
