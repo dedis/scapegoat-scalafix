@@ -37,3 +37,5 @@ fix.EmptyWhileBlock
 fix.FinalizerWithoutSuper
 fix.LooksLikeInterpolatedString
 fix.MethodReturningAny
+fix.NullAssignment
+fix.RepeatedCaseBody
