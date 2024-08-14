@@ -6,8 +6,8 @@ package fix
 object MethodReturningAny {
 
   def inferredAny(value: Boolean) = { // assert: MethodReturningAny
-    if (value) "This is a string"  // returns a String
-    else 42                         // returns an Int
+    if (value) "This is a string" // returns a String
+    else 42 // returns an Int
   }
 
   // This method returns Any in Scala 2 and should be flagged. It returns Int | String in Scala 3 and will also be flagged.
@@ -24,6 +24,5 @@ object MethodReturningAny {
   class B extends A {
     override def foo: AnyRef = "overridden foo" // scalafix: ok;
   }
-
 
 }
