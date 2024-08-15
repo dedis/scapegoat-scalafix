@@ -39,3 +39,5 @@ fix.LooksLikeInterpolatedString
 fix.MethodReturningAny
 fix.NullAssignment
 fix.RepeatedCaseBody
+fix.RepeatedIfElseBody
+fix.SwallowedException
