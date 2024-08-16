@@ -42,3 +42,4 @@ fix.RepeatedCaseBody
 fix.RepeatedIfElseBody
 fix.SwallowedException
 fix.UnnecessaryConversion
+fix.UnreachableCatch
