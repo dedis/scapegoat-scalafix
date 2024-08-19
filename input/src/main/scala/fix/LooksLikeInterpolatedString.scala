@@ -3,8 +3,6 @@ rule = LooksLikeInterpolatedString
  */
 package fix
 
-import fix.Test.a
-
 object LooksLikeInterpolatedString {
   def test(): Unit = {
     val str = "this is my $interpolated string lookalike" // assert: LooksLikeInterpolatedString
@@ -26,9 +24,9 @@ object LooksLikeInterpolatedString {
   implicit class QQuotes(val sc: StringContext) extends AnyVal {
     def q(args: Any*): String = "anything"
   }
-}
 
-object Test {
-  val a = "hello"
+  object Test {
+    val a = "hello"
 
+  }
 }
