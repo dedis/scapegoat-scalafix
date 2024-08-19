@@ -43,3 +43,4 @@ fix.RepeatedIfElseBody
 fix.SwallowedException
 fix.UnnecessaryConversion
 fix.UnreachableCatch
+fix.UnusedMethodParameter
