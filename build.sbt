@@ -12,10 +12,16 @@ inThisBuild(
     developers := List(Developer("t1b00", "Thibault Czarniak", "thibault.czarniak@epfl.ch", url("https://www.linkedin.com/in/thcz/"))),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
+    semanticdbOptions += "synthetics:on",
     scmInfo := Some(ScmInfo(url("https://github.com/dedis/scapegoat-scalafix"), "scm:git@github.com:dedis/scapegoat-scalafix.git")),
     version := "1.0",
     versionScheme := Some("pvp")
   )
+)
+
+scalacOptions ++= Seq(
+  "-Yrangepos",
+  "-P:semanticdb:synthetics:on",
 )
 
 lazy val `scapegoat-scalafix` = (project in file("."))
