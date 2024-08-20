@@ -129,4 +129,19 @@ object VarCouldBeVal {
     l.foreach(e => modif = e)
   }
 
+  def foo15 = {
+    var a = 0 // assert: VarCouldBeVal
+    if (a != 0) println("test")
+    if (a >= 0) println("test")
+    if (a <= 0) println("test")
+  }
+
+  def foo16 = {
+    var a = 0 // scalafix: ok;
+    if (a != 0) println("test")
+    else {
+      a *= 2
+    }
+  }
+
 }
