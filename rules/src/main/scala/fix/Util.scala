@@ -16,11 +16,13 @@ object Util {
     *   The type of the val/var, or Symbol.None if not found
     */
   // Type information is stored in the ValueSignature of the Term if it is a val/var.
+  // It can also happen that it is stored in a MethodSignature for Scala 2 in the case of a companion object.
   // We pass the term a Stat as they have the same information, we can thus handle more cases and Term is a child of Stat
   def getType(term: Stat)(implicit doc: SemanticDocument): Symbol = {
     term.symbol.info match {
       case Some(symInfo) => symInfo.signature match {
           case ValueSignature(TypeRef(_, symbol, _)) => symbol
+          case MethodSignature(_, _, TypeRef(_, symbol, _)) => symbol
           case _                                     => Symbol.None
         }
       case _ => Symbol.None
