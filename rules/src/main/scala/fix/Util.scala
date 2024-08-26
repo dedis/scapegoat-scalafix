@@ -21,9 +21,9 @@ object Util {
   def getType(term: Stat)(implicit doc: SemanticDocument): Symbol = {
     term.symbol.info match {
       case Some(symInfo) => symInfo.signature match {
-          case ValueSignature(TypeRef(_, symbol, _)) => symbol
+          case ValueSignature(TypeRef(_, symbol, _))        => symbol
           case MethodSignature(_, _, TypeRef(_, symbol, _)) => symbol
-          case _                                     => Symbol.None
+          case _                                            => Symbol.None
         }
       case _ => Symbol.None
     }

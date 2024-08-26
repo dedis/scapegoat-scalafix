@@ -17,9 +17,8 @@ object NullParameter {
   def normal(a: String) = {}
   normal("test") // scalafix: ok;
 
-
   abstract class Super(val name: String)
   case class Boo(override val name: String) extends Super(name) // scalafix: ok;
-  class Birds(names:String*) // scalafix: ok;
+  class Birds(names: String*) // scalafix: ok;
 
 }

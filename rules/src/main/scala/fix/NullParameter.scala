@@ -21,9 +21,9 @@ class NullParameter extends SemanticRule("NullParameter") {
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
       case Term.ArgClause(values, _) => values.collect {
-        case Lit.Null() => Patch.lint(diag(values.head.pos))
-        case _ => Patch.empty
-      }
+          case Lit.Null() => Patch.lint(diag(values.head.pos))
+          case _          => Patch.empty
+        }
     }.flatten.asPatch
   }
 }
