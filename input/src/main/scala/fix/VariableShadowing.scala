@@ -30,7 +30,7 @@ object VariableShadowing {
 
   class Test4 {
     val a = 1
-    def foo(b : Int) = b match {
+    def foo(b: Int) = b match {
       case f =>
         def boo() = {
           val a = 2 // assert: VariableShadowing
@@ -40,14 +40,14 @@ object VariableShadowing {
   }
 
   class Test5 {
-    def foo(a : Int) = {
+    def foo(a: Int) = {
       val a = 1 // assert: VariableShadowing
       println(a)
     }
   }
 
   class Test6 {
-    def foo(a : Int) = {
+    def foo(a: Int) = {
       println(a)
       def boo = {
         val a = 2 // assert: VariableShadowing
@@ -71,20 +71,20 @@ object VariableShadowing {
     val something = 4
     if (1 > 0) {
       val something = 4 // assert: VariableShadowing
-      println(something+1)
+      println(something + 1)
     } else {
       val something = 2 // assert: VariableShadowing
-      println(something+2)
+      println(something + 2)
     }
   }
 
   class Test9 {
     if (1 > 0) {
       val something = 4 // scalafix: ok;
-      println(something+1)
+      println(something + 1)
     } else {
       val something = 2 // scalafix: ok;
-      println(something+2)
+      println(something + 2)
     }
   }
 
@@ -117,10 +117,9 @@ object VariableShadowing {
   for (i <- 1 to 10) println(i.toString) // scalafix: ok;
   for (i <- 1 to 10) println(i.toString) // scalafix: ok;
 
-
   for {
-      c <- "Hello, world!" // scalafix: ok;
-      if c != ','
+    c <- "Hello, world!" // scalafix: ok;
+    if c != ','
   } println(c)
 
   object Test1 {
@@ -144,7 +143,7 @@ object VariableShadowing {
 
     def test(shadowedArg: AnyVal): Boolean =
       shadowedArg match {
-        case l1: Long   => testCaller(l1, testCallbackFunction1)  // scalafix: ok;
+        case l1: Long   => testCaller(l1, testCallbackFunction1) // scalafix: ok;
         case l2: Double => testCaller(l2.toLong, testCallbackFunction2)
         case l3         => false
       }
