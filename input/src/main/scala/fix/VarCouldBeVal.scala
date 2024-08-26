@@ -3,9 +3,8 @@ rule = VarCouldBeVal
  */
 package fix
 
-import scala.util.Try
-
 object VarCouldBeVal {
+
   def foo = {
     var count = 1 // assert: VarCouldBeVal
     println(count)
@@ -141,6 +140,32 @@ object VarCouldBeVal {
     if (a != 0) println("test")
     else {
       a *= 2
+    }
+  }
+
+  class Test {
+    var c = 2 // assert: VarCouldBeVal
+    def foo = {
+      println("test")
+    }
+  }
+
+  class Test2 {
+    var c = 2 // scalafix: ok;
+    def foo = {
+      c = 3
+      println("test")
+    }
+  }
+
+  class Test4 {
+    def foo = {
+      if (true) {
+        var a = 8 // assert: VarCouldBeVal
+      } else {
+        var a = 8 // scalafix: ok;
+        a = 4
+      }
     }
   }
 

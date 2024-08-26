@@ -14,9 +14,9 @@ class VarCouldBeVal extends SemanticRule("VarCouldBeVal") {
 
   private def diag(pos: Position) = Diagnostic(
     "",
-    "Finds catch blocks that don't handle caught exceptions.",
+    "Checks for vars that could be declared as vals..",
     pos,
-    "If you use a try/catch block to deal with an exception, you should handle all of the caught exceptions or name it ignore(d). If you're throwing another exception in the result, you should include the original exception as the cause.",
+    "A variable (var) that is never written to could be turned into a value (val).",
     LintSeverity.Warning
   )
   override def fix(implicit doc: SemanticDocument): Patch = {
@@ -25,9 +25,9 @@ class VarCouldBeVal extends SemanticRule("VarCouldBeVal") {
     val notAssignmentsSet = Set("<=", ">=", "!=")
     def isAssignment(op: String) = op.endsWith("=") && !notAssignmentsSet.contains(op)
 
-    def collect(block: List[Stat], vars: mutable.HashMap[String, Position]): List[Patch] = {
+    def collect(block: List[Stat]): List[Patch] = {
       // Extracts the stats from blocks and otherwise converts them so that we can do a foreach on them
-      def normalize(term: Stat) = term match {
+      def normalize(term: Stat): List[Stat] = term match {
         case Term.Block(stats) => stats
         case _                 => List(term)
       }
@@ -43,8 +43,7 @@ class VarCouldBeVal extends SemanticRule("VarCouldBeVal") {
           case Term.ApplyInfix.After_4_6_0(Term.Name(name), Term.Name(op), _, _) if isAssignment(op) => vars.remove(name)
 
           // Blocks {} and templates
-          case Term.Block(stats)                       => collectInner(stats, vars)
-          case Template.After_4_4_0(_, _, _, stats, _) => collectInner(stats, vars)
+          case Term.Block(stats) => collectInner(stats, vars)
 
           // Examine for loop body recursively. Condition cannot be a block so no need to be examined
           case Term.For(_, body) => collectInner(normalize(body), vars)
@@ -74,18 +73,24 @@ class VarCouldBeVal extends SemanticRule("VarCouldBeVal") {
               case Term.ArgClause(args, _) => args.foreach(a => collectInner(normalize(a), vars)) // For some reason, ArgClause is not considered as a Stat even though it inherits from it
               case _                       => ()
             }
+
           case _ => ()
         }
       }
 
+      val vars = mutable.HashMap.empty[String, Position]
       collectInner(block, vars)
       vars.map(name => Patch.lint(diag(name._2))).toList
     }
 
-    // We first look at the templates (start of a definition) or the blocks and then use our collector
+    // We first look at the templates (start of a definition) i.e. start of a scope (variables don't go outside)
+    // We also look at blocks as context themselves, because a variable could be declared in a block and if it is
+    // not reused inside of it, it should be flagged
     doc.tree.collect {
-      case Template.After_4_4_0(_, _, _, stats, _) => collect(stats, mutable.HashMap.empty)
-      case Term.Block(stats)                       => collect(stats, mutable.HashMap.empty)
+      // Corresponds to class, trait, object...
+      case Template.After_4_4_0(_, _, _, stats, _) => collect(stats)
+      // Inspect blocks as contexts themselves
+      case Term.Block(stats) => collect(stats)
     }.flatten.asPatch
   }
 }
