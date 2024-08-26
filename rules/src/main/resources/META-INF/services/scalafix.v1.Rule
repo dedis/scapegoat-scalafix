@@ -31,7 +31,7 @@ fix.DuplicateImport
 fix.EmptyFor
 fix.EmptyIfBlock
 fix.EmptyMethod
-fix.EmptySynchronized
+fix.EmptySynchronizedBlock
 fix.EmptyTryBlock
 fix.EmptyWhileBlock
 fix.FinalizerWithoutSuper
@@ -48,3 +48,5 @@ fix.VarCouldBeVal
 fix.VariableShadowing
 fix.WhileTrue
 fix.InterpolationToString
+fix.EitherGet
+fix.NullParameter
