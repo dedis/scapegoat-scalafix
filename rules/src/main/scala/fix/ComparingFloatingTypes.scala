@@ -1,5 +1,5 @@
 /*
-rule = CatchNpe
+rule = ComparingFloatingTypes
  */
 package fix
 

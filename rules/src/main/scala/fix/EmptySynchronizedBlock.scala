@@ -1,5 +1,5 @@
 /*
-rule = EmptySynchronized
+rule = EmptySynchronizedBlock
  */
 package fix
 
@@ -8,7 +8,7 @@ import scalafix.v1._
 
 import scala.meta._
 
-class EmptySynchronized extends SemanticRule("EmptySynchronized") {
+class EmptySynchronizedBlock extends SemanticRule("EmptySynchronizedBlock") {
 
   private def diag(pos: Position) = Diagnostic(
     "",
