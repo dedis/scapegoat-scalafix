@@ -23,7 +23,7 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
 
     def collect(block: List[Stat], vars: mutable.HashSet[String]): List[Patch] = {
       // Extracts the stats from blocks and otherwise converts them so that we can do a foreach on them
-      def normalize(term: Stat) = term match {
+      def normalize(term: Stat): List[Stat] = term match {
         case Term.Block(stats) => stats
         case _                 => List(term)
       }
@@ -31,17 +31,16 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
       @nowarn // this is because in Scala 2, t.children at line 47 is a List[Tree], but in Scala 3 it is a List[Stat], so we need to suppress the warning for the unreachable case case _ in Scala 3
       def collectInner(block: List[Stat], vars: mutable.HashSet[String], flagged: mutable.HashSet[Position]): Unit = {
 
-
         def handleCases(c: List[Case], vars: mutable.HashSet[String]): Unit = {
           c.foreach {
             // Collect variables in cases e.g. case a => ...
             case Case(Pat.Var(name), _, body) => updateVars(name.value, name.pos); collectInner(normalize(body), vars.clone(), flagged)
-            case _ => ()
+            case _                            => ()
           }
         }
 
         def updateVars(name: String, pos: Position): Unit = {
-          if(vars.contains(name)) flagged += pos
+          if (vars.contains(name)) flagged += pos
           else vars += name
         }
 
@@ -58,7 +57,7 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
 
           case Defn.Def.After_4_6_0(_, _, paramClauseGroup, _, Term.Block(stats)) =>
             // Collect parameters in method e.g. def(a : Int) = ...
-            if(paramClauseGroup.isDefined) paramClauseGroup.get.paramClauses.foreach(p => p.values.foreach(param => updateVars(param.name.value, param.name.pos)))
+            if (paramClauseGroup.isDefined) paramClauseGroup.get.paramClauses.foreach(p => p.values.foreach(param => updateVars(param.name.value, param.name.pos)))
             collectInner(stats, vars.clone(), flagged)
 
           // Examine for loop body recursively. Condition cannot be a block so no need to be examined
@@ -81,7 +80,6 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
 
           // Examine argclauses e.g. l.foreach(e => ...), e => ... is the argclause
           case Term.ArgClause(args, _) => args.foreach(a => collectInner(normalize(a), vars.clone(), flagged))
-
 
           // Try to handle everything else
           case t: Stat =>
@@ -112,8 +110,8 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
       // We don't handle template directly to be able to collect the variables in the constructor
       case Defn.Class.After_4_6_0(_, _, _, Ctor.Primary.After_4_6_0(_, _, params), Template.After_4_4_0(_, _, _, stats, _)) => collectWithConstructor(params, stats)
       case Defn.Trait.After_4_6_0(_, _, _, Ctor.Primary.After_4_6_0(_, _, params), Template.After_4_4_0(_, _, _, stats, _)) => collectWithConstructor(params, stats)
-      case Defn.Enum.After_4_6_0(_, _, _, Ctor.Primary.After_4_6_0(_, _, params), Template.After_4_4_0(_, _, _, stats, _)) => collectWithConstructor(params, stats)
-      case Defn.Object(_, _, Template.After_4_4_0(_, _, _, stats, _)) => collect(stats, mutable.HashSet.empty[String])
+      case Defn.Enum.After_4_6_0(_, _, _, Ctor.Primary.After_4_6_0(_, _, params), Template.After_4_4_0(_, _, _, stats, _))  => collectWithConstructor(params, stats)
+      case Defn.Object(_, _, Template.After_4_4_0(_, _, _, stats, _))                                                       => collect(stats, mutable.HashSet.empty[String])
       // Inspect blocks as contexts themselves
       case Term.Block(stats) => collect(stats, mutable.HashSet.empty[String])
     }.flatten.asPatch
