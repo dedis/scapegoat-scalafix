@@ -13,7 +13,7 @@ object UnusedMethodParameter {
 
   class Test1 {
     val initstuff = "sammy" // assert: UnusedMethodParameter
-    val test = ??? // scalafix: ok;
+    val test = ??? // assert: UnusedMethodParameter
 
     def foo(a: String, b: Int, c: Int): Unit = { // assert: UnusedMethodParameter
       println(b)
@@ -124,4 +124,19 @@ object UnusedMethodParameter {
     def foo(x: Int) = 42 // assert: UnusedMethodParameter
     def fooUnused(@unused x: Int) = 42 // scalafix: ok;
   }
+
+  trait A
+  class MessageHandler {
+    val dbActor: A = ??? // assert: UnusedMethodParameter
+  }
+  class FederationHandler(dbRef: => A) extends MessageHandler { // scalafix: ok;
+    class B {}
+
+    override final val dbActor: A = dbRef // assert: UnusedMethodParameter
+
+    def olivia(a: Int) = { // assert: UnusedMethodParameter
+      println("test")
+    }
+  }
+
 }
