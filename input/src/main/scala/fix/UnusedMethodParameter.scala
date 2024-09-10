@@ -12,8 +12,7 @@ object UnusedMethodParameter {
   }
 
   class Test1 {
-    val initstuff = "sammy" // assert: UnusedMethodParameter
-    val test = ??? // assert: UnusedMethodParameter
+    val initstuff = "sammy" // scalafix: ok;
 
     def foo(a: String, b: Int, c: Int): Unit = { // assert: UnusedMethodParameter
       println(b)
@@ -125,18 +124,35 @@ object UnusedMethodParameter {
     def fooUnused(@unused x: Int) = 42 // scalafix: ok;
   }
 
+  class Foo18 {
+    def foo(x: Int) = // scalafix: ok;
+      System.currentTimeMillis() match {
+        case 22 => println(x)
+        case _  => ()
+      }
+
+    def foo2(y: Int) =
+      if (System.currentTimeMillis() == 22) println(y) // scalafix: ok;
+      else ()
+  }
+
   trait A
   class MessageHandler {
-    val dbActor: A = ??? // assert: UnusedMethodParameter
+    val dbActor: A = ??? // scalafix: ok;
   }
   class FederationHandler(dbRef: => A) extends MessageHandler { // scalafix: ok;
     class B {}
 
-    override final val dbActor: A = dbRef // assert: UnusedMethodParameter
+    override final val dbActor: A = dbRef // scalafix: ok;
 
     def olivia(a: Int) = { // assert: UnusedMethodParameter
       println("test")
     }
+  }
+
+  class C(val x: Int) {}
+  def apply(test: Int): Unit = { // scalafix: ok;
+    new C(test)
   }
 
 }
