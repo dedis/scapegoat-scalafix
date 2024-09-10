@@ -19,7 +19,7 @@ class UnusedMethodParameter extends SemanticRule("UnusedMethodParameter") {
 
   override def fix(implicit doc: SemanticDocument): Patch = {
 
-    def unusedParamsTree(tree: Tree, params: Set[String]): Set[String] = {
+    def unusedParams(tree: Tree, params: Set[String]): Set[String] = {
       if (params.isEmpty) params
       else tree.collect {
         case t @ Term.Name(name) if !t.parent.exists { case Term.Param(_) => true; case _ => false } => name
@@ -46,7 +46,7 @@ class UnusedMethodParameter extends SemanticRule("UnusedMethodParameter") {
           .collect {
             case t @ Term.Param(mods, name, _, _) if !mods.exists(m => m.toString() == "var" || m.toString() == "val" || m.toString() == "@unused") => (name.value, t.pos)
           }.toMap
-        val unused = unusedParamsTree(t, ctorNotVals.keySet)
+        val unused = unusedParams(t, ctorNotVals.keySet)
         unused.map(e =>
           Patch.lint(diag(ctorNotVals(e)))
         ).asPatch
@@ -75,7 +75,7 @@ class UnusedMethodParameter extends SemanticRule("UnusedMethodParameter") {
           case Term.Param(mods, p @ Term.Name(name), _, _) if !mods.exists(_.toString == "@unused") => (name, p.pos)
         }.toMap
 
-        unusedParamsTree(t, paramNames.keySet).map(e =>
+        unusedParams(t, paramNames.keySet).map(e =>
           Patch.lint(diag(paramNames(e)))
         ).asPatch
     }
