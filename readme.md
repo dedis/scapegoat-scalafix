@@ -10,7 +10,6 @@
 * **Scala 2.13**:
 [![maven](https://img.shields.io/maven-central/v/io.github.dedis/scapegoat-scalafix_2.13)](https://search.maven.org/artifact/io.github.dedis/scapegoat-scalafix_2.13)
 
-[version]: 1.0
 ## Description
 This project is a Scalafix implementation of the Scapegoat linter for Scala 3. It contains a set of rules that can be run on Scala code to detect potential issues and bad practices. The rules are based on the Scapegoat linter for Scala 2, but have been adapted to work with Scalafix and Scala 3.
 
@@ -20,7 +19,7 @@ For now, this project has 52 rules but more are being worked on.
 
 To install the rules, simply add the following to your `build.sbt` file:
 ```
-ThisBuild / scalafixDependencies += "io.github.dedis" %% "scapegoat-scalafix" % "1.1.1"
+ThisBuild / scalafixDependencies += "io.github.dedis" %% "scapegoat-scalafix" % "1.1.2"
 ```
 
 **The rules are compatible with Scala 2.13 and Scala 3 (tested for Scala 3.3.1).**
