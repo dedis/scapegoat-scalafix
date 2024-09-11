@@ -141,7 +141,7 @@ object VariableShadowing {
 
     private def testCaller(renamedArg: Long, func: Long => Boolean): Boolean = func(renamedArg)
 
-    def test(shadowedArg: AnyVal): Boolean =
+    def test(shadowedArg: AnyVal): Boolean = // scalafix: ok;
       shadowedArg match {
         case l1: Long   => testCaller(l1, testCallbackFunction1) // scalafix: ok;
         case l2: Double => testCaller(l2.toLong, testCallbackFunction2)
