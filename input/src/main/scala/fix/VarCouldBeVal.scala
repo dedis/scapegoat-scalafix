@@ -3,6 +3,8 @@ rule = VarCouldBeVal
  */
 package fix
 
+import scala.util.{Success, Try}
+
 object VarCouldBeVal {
 
   def foo = {
@@ -167,6 +169,24 @@ object VarCouldBeVal {
         a = 4
       }
     }
+  }
+
+  // Taken from a real test case
+  // Original code didn't take match term in consideration
+  private def test(a: Int) = {
+    var b = 2 // scalafix: ok;
+    val a = Some(3)
+
+    Try {
+      a match {
+        case Some(2) => b = 3
+        case _       => throw new IllegalArgumentException("")
+      }
+    } match {
+      case Success(_) => ()
+      case _          => ()
+    }
+
   }
 
 }
