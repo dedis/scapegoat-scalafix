@@ -108,7 +108,7 @@ You can also create a `.scalafix.conf` file and enable rules in them. Here is an
 rules = [
     ArraysInFormat,
     CatchNpe,
-    ComparingFloatingPointTypes,
+    ComparingFloatingTypes,
     EitherGet,
     EmptyInterpolatedString,
     IllegalFormatString,
