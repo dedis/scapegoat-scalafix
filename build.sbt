@@ -12,9 +12,8 @@ inThisBuild(
     developers := List(Developer("t1b00", "Thibault Czarniak", "thibault.czarniak@epfl.ch", url("https://www.linkedin.com/in/thcz/"))),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
-    semanticdbOptions += "synthetics:on",
     scmInfo := Some(ScmInfo(url("https://github.com/dedis/scapegoat-scalafix"), "scm:git@github.com:dedis/scapegoat-scalafix.git")),
-    version := "1.0",
+    version := "1.1.2",
     versionScheme := Some("pvp")
   )
 )
