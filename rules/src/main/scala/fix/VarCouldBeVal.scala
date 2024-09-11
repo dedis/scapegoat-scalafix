@@ -34,7 +34,7 @@ class VarCouldBeVal extends SemanticRule("VarCouldBeVal") {
         // Corresponds to compound assignments e.g. +=, -=, etc.
         case Term.ApplyInfix.After_4_6_0(Term.Name(name), Term.Name(op), _, _) if isAssignment(op) => vars.remove(name)
       }
-        vars.map(name => Patch.lint(diag(name._2))).asPatch
+      vars.map(name => Patch.lint(diag(name._2))).asPatch
     }
 
     // We first look at the templates (start of a definition) i.e. start of a scope (variables don't go outside)

@@ -19,10 +19,9 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
   )
   override def fix(implicit doc: SemanticDocument): Patch = {
 
-    def collect2(tree: Tree, vars: mutable.HashSet[String]) : List[Patch] = {
+    def collect2(tree: Tree, vars: mutable.HashSet[String]): List[Patch] = {
       val flagged = mutable.HashSet.empty[Position]
       var varsList = vars :: Nil
-
 
       def collectInner(tree: Tree, flagged: mutable.HashSet[Position]): mutable.HashSet[Position] = {
         def updateVars(name: String, pos: Position): Unit = {
@@ -60,29 +59,29 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
         }
 
         tree match {
-          case t @ (Term.Block(_) | Template.After_4_4_0(_, _, _, _, _) | Term.PartialFunction(_))  => ecle(t.children)
-          case Term.Function.After_4_6_0(_, body) => ece(body)
-          case Defn.Val(_, List(Pat.Var(name)), _, _)             => updateVars(name.value, name.pos)
-          case Defn.Var.After_4_7_2(_, List(Pat.Var(name)), _, _) => updateVars(name.value, name.pos)
+          case t @ (Term.Block(_) | Template.After_4_4_0(_, _, _, _, _) | Term.PartialFunction(_)) => ecle(t.children)
+          case Term.Function.After_4_6_0(_, body)                                                  => ece(body)
+          case Defn.Val(_, List(Pat.Var(name)), _, _)                                              => updateVars(name.value, name.pos)
+          case Defn.Var.After_4_7_2(_, List(Pat.Var(name)), _, _)                                  => updateVars(name.value, name.pos)
           // Examine paramclauses e.g. def foo(a: Int) or class bar(b: Int)
           case Term.ParamClause(params, _) => params.foreach(p => updateVars(p.name.value, p.name.pos))
-          case Defn.Def.After_4_7_3(_, _, paramClauseGroups, _ , body) =>
+          case Defn.Def.After_4_7_3(_, _, paramClauseGroups, _, body) =>
             enter()
             paramClauseHandler(paramClauseGroups)
             collectInner(body, flagged)
             exit()
           case Term.Match.After_4_4_5(_, cases, _) =>
             cases.foreach {
-            case Case(Pat.Var(name @ Term.Name(_)), _, body) => enter(); updateVars(name.value, name.pos); collectInner(body, flagged); exit()
-            case Case(_, _, body) => ece(body)
-            case _ => ()
-          }
+              case Case(Pat.Var(name @ Term.Name(_)), _, body) => enter(); updateVars(name.value, name.pos); collectInner(body, flagged); exit()
+              case Case(_, _, body)                            => ece(body)
+              case _                                           => ()
+            }
           case other => ecle(other.children)
         }
         flagged
       }
 
-        collectInner(tree, flagged).map(p => Patch.lint(diag(p))).toList
+      collectInner(tree, flagged).map(p => Patch.lint(diag(p))).toList
 
     }
 
