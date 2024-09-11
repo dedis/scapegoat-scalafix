@@ -19,43 +19,47 @@ class VariableShadowing extends SemanticRule("VariableShadowing") {
   )
   override def fix(implicit doc: SemanticDocument): Patch = {
 
+    // We use a similar approach to Scapegoat's in which we have different contexts which are updated as we go down the trees.
+    // Here we cannot simply traverse the tree using a .traverse method or .collect since we need to know when we are out of a segment.
+    // For this, we traverse it using recursive calls on the children, whilst keeping track of the context via the varsList.
     def collect2(tree: Tree, vars: mutable.HashSet[String]): List[Patch] = {
       val flagged = mutable.HashSet.empty[Position]
       var varsList = vars :: Nil
 
       def collectInner(tree: Tree, flagged: mutable.HashSet[Position]): mutable.HashSet[Position] = {
+        // Checks if variable has already been seen before, if so flags it. Otherwise simply adds the variable to the current context.
         def updateVars(name: String, pos: Position): Unit = {
           if (exists(name)) flagged += pos
           else varsList.headOption.foreach(_ += name)
         }
 
-        def enter() = {
+        // Add new context
+        def enter(): Unit = {
           varsList = mutable.HashSet[String]() :: varsList
         }
-        def exit() = varsList = varsList.tail
 
+        // Remove context
+        def exit(): Unit = varsList = varsList.tail
+
+        // Check if variable exists in one of the contexts (i.e. current or above)
         def exists(s: String) = varsList.exists(_.contains(s))
 
-        def ece(element: Tree) = {
+        // Combine the enter, collect and exit methods since we call this often
+        def ece(element: Tree): Unit = {
           enter()
           collectInner(element, flagged)
           exit()
         }
 
+        // Same as ece, but for lists
         def ecle(elements: List[Tree]): Unit = {
           enter()
-          for (elem <- elements) { collectInner(elem, flagged) }
+          elements.foreach(e => collectInner(e, flagged))
           exit()
         }
 
-        def paramClauseHandler(paramClauses: List[Member.ParamClauseGroup]): Unit = {
-          for (elem <- paramClauses) {
-            for (paramClauseGroup <- elem.paramClauses) {
-              for (param <- paramClauseGroup.values) {
-                updateVars(param.name.value, param.name.pos)
-              }
-            }
-          }
+        def paramClauseHandler(paramClauseGroups: List[Member.ParamClauseGroup]): Unit = {
+          paramClauseGroups.foreach(g => g.paramClauses.foreach(p => p.values.foreach(param => updateVars(param.name.value, param.name.pos))))
         }
 
         tree match {
