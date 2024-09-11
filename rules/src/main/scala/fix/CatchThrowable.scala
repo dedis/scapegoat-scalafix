@@ -12,7 +12,7 @@ class CatchThrowable extends SemanticRule("CatchThrowable") {
 
   private def diag(pos: Position) = Diagnostic(
     "",
-    "Checks for try blocks that catch Throwable..",
+    "Checks for try blocks that catch Throwable.",
     pos,
     "Did you intend to catch all throwables? Consider catching a more specific exception class.",
     LintSeverity.Warning
