@@ -15,7 +15,7 @@ class ArraysEquals extends SemanticRule("ArraysEquals") {
     "Checks for comparison of arrays using == which will always return false.",
     pos,
     "Array equals is not an equality check. Use sameElements or convert to another collection type.",
-    LintSeverity.Warning
+    LintSeverity.Info
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
