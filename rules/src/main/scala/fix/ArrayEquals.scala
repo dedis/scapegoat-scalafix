@@ -1,5 +1,5 @@
 /*
-rule = ArraysEquals
+rule = ArrayEquals
  */
 package fix
 
@@ -8,7 +8,7 @@ import scalafix.v1._
 
 import scala.meta._
 
-class ArraysEquals extends SemanticRule("ArraysEquals") {
+class ArrayEquals extends SemanticRule("ArrayEquals") {
 
   private def diag(pos: Position) = Diagnostic(
     "",

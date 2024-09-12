@@ -1,5 +1,5 @@
 /*
-rule = ComparingFloatingTypes
+rule = ComparingFloatingPointTypes
  */
 package fix
 
@@ -8,7 +8,7 @@ import scalafix.lint.LintSeverity
 import scala.meta._
 import scalafix.v1._
 
-class ComparingFloatingTypes extends SemanticRule("ComparingFloatingTypes") {
+class ComparingFloatingPointTypes extends SemanticRule("ComparingFloatingPointTypes") {
 
   private def diag(pos: Position) = Diagnostic(
     "",
