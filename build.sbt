@@ -13,7 +13,7 @@ inThisBuild(
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
     scmInfo := Some(ScmInfo(url("https://github.com/dedis/scapegoat-scalafix"), "scm:git@github.com:dedis/scapegoat-scalafix.git")),
-    version := "1.1.2",
+    version := "1.1.3",
     versionScheme := Some("pvp")
   )
 )
