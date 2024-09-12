@@ -27,7 +27,8 @@ class BigDecimalDoubleConstructor extends SemanticRule("BigDecimalDoubleConstruc
 
     doc.tree.collect {
       // Corresponds to BigDecimal(...) where ... is a floating point / double value.
-      case t @ Term.Apply.After_4_6_0(Term.Name("BigDecimal"), Term.ArgClause(List(arg), _)) if isFloatOrDouble(arg)                                                                    => Patch.lint(diag(t.pos))
+      case t @ Term.Apply.After_4_6_0(Term.Name("BigDecimal"), Term.ArgClause(List(arg), _)) if isFloatOrDouble(arg) => Patch.lint(diag(t.pos))
+      // Corresponds to new java.math.BigDecimal(...) where ... is a floating point / double value.
       case t @ Init.After_4_6_0(Type.Select(Term.Select(Term.Name("java"), Term.Name("math")), Type.Name("BigDecimal")), _, List(Term.ArgClause(List(arg), _))) if isFloatOrDouble(arg) => Patch.lint(diag(t.pos))
     }.asPatch
   }

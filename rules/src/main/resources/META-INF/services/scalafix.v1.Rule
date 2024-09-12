@@ -55,3 +55,5 @@ fix.ArraysToString
 fix.AsInstanceOf
 fix.AvoidToMinusOne
 fix.BigDecimalDoubleConstructor
+fix.BigDecimalScaleWithoutRoundingMode
+fix.BooleanParameter
