@@ -1,5 +1,5 @@
 /*
-rule = ArraysEquals
+rule = ArraysToString
  */
 package fix
 
@@ -8,24 +8,20 @@ import scalafix.v1._
 
 import scala.meta._
 
-class ArraysToString extends SemanticRule("ArraysEquals") {
+class ArraysToString extends SemanticRule("ArraysToString") {
 
   private def diag(pos: Position) = Diagnostic(
     "",
-    "Checks for comparison of arrays using == which will always return false.",
+    "Checks for explicit toString calls on arrays",
     pos,
-    "Array equals is not an equality check. Use sameElements or convert to another collection type.",
+    "Calling toString on an array does not perform a deep toString.",
     LintSeverity.Warning
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
-
-    def isArray(elem: Stat) = Util.matchType(elem, "scala/Array")
-
     doc.tree.collect {
-      // Corresponds to a == b or a != b
-      case t @ Term.ApplyInfix.After_4_6_0(lhs, Term.Name("==" | "!="), _, Term.ArgClause(List(rhs), _)) if isArray(lhs) && isArray(rhs) => Patch.lint(diag(t.pos))
-      case _                                                                                                                             => Patch.empty
+      // Corresponds to a.toString or a.toString() or Array(1, 2, 3).toString or Array(1, 2, 3).toString()
+      case t @ Term.Select(qual, Term.Name("toString")) if Util.matchType(qual, "scala/Array") => Patch.lint(diag(t.pos))
     }.asPatch
   }
 

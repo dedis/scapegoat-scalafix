@@ -51,3 +51,4 @@ fix.InterpolationToString
 fix.EitherGet
 fix.NullParameter
 fix.ArraysEquals
+fix.ArraysToString

@@ -23,7 +23,7 @@ class ArraysEquals extends SemanticRule("ArraysEquals") {
     def isArray(elem: Stat) = Util.matchType(elem, "scala/Array")
 
     doc.tree.collect {
-      // Corresponds to a == b or a != b
+      // Corresponds to a == b or a != b or Array(1,2,3) == Array(2,3,4) or Array(1,2,3) != Array(2,3,4)
       case t @ Term.ApplyInfix.After_4_6_0(lhs, Term.Name("==" | "!="), _, Term.ArgClause(List(rhs), _)) if isArray(lhs) && isArray(rhs) => Patch.lint(diag(t.pos))
       case _                                                                                                                             => Patch.empty
     }.asPatch
