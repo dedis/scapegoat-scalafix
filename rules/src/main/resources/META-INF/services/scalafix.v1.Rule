@@ -50,3 +50,4 @@ fix.WhileTrue
 fix.InterpolationToString
 fix.EitherGet
 fix.NullParameter
+fix.ArraysEquals
