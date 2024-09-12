@@ -61,3 +61,5 @@ fix.BoundedByFinalType
 fix.BrokenOddness
 fix.ClassNames
 fix.CollectionNamingConfusion
+fix.ComparisonToEmptyList
+fix.ComparisonToEmptySet
