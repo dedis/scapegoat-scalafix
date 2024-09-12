@@ -14,10 +14,17 @@
 This project is a Scalafix implementation of the Scapegoat linter for Scala 3. It contains a set of rules that can be run on Scala code to detect potential issues and bad practices. The rules are based on the Scapegoat linter for Scala 2, but have been adapted to work with Scalafix and Scala 3.
 
 For now, this project has 52 rules but more are being worked on.
+You can track the progress [here](https://docs.google.com/spreadsheets/d/1XovJJg3EInQFFL1-tpqGxpP2O4RFzCOF7zDalQIeB7E/edit?usp=sharing).
 
 ## Installation
 
-To install the rules, simply add the following to your `build.sbt` file:
+To install the rules, you first should have the Scalafix plugin installed.
+You can install it by adding this line to `project/plugins.sbt`:
+```
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.12.1")
+```
+
+Then, to obtain this rule set, simply add the following line to your `build.sbt` file:
 ```
 ThisBuild / scalafixDependencies += "io.github.dedis" %% "scapegoat-scalafix" % "1.1.2"
 ```
