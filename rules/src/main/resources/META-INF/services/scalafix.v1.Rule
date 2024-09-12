@@ -53,3 +53,5 @@ fix.NullParameter
 fix.ArraysEquals
 fix.ArraysToString
 fix.AsInstanceOf
+fix.AvoidToMinusOne
+fix.BigDecimalDoubleConstructor
