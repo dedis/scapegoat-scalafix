@@ -15,7 +15,7 @@ class BooleanParameter extends SemanticRule("BooleanParameter") {
     "Checks for functions that have a Boolean parameter.",
     pos,
     "Method has Boolean parameter. Consider splitting into two methods or using a case class.",
-    LintSeverity.Warning
+    LintSeverity.Info
   )
 
   override def fix(implicit doc: SemanticDocument): Patch = {
