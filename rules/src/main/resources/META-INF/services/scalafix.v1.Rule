@@ -63,3 +63,8 @@ fix.ClassNames
 fix.CollectionNamingConfusion
 fix.ComparisonToEmptyList
 fix.ComparisonToEmptySet
+fix.DivideByOne
+fix.DoubleNegation
+fix.DuplicateMapKey
+fix.DuplicateSetValue
+fix.EmptyCaseClass
