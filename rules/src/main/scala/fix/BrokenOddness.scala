@@ -20,7 +20,7 @@ class BrokenOddness extends SemanticRule("BrokenOddness") {
 
   override def fix(implicit doc: SemanticDocument): Patch = {
     doc.tree.collect {
-      // Corresponds to a.asInstanceOf(...) or a.asInstanceOf[...]
+      // Corresponds to a % 2 == 1
       case t @ Term.ApplyInfix.After_4_6_0(Term.ApplyInfix.After_4_6_0(_, Term.Name("%"), _, Term.ArgClause(List(Lit.Int(2)), _)), Term.Name("=="), _, Term.ArgClause(List(Lit.Int(1)), _)) => Patch.lint(diag(t.pos))
     }.asPatch
   }
