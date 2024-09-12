@@ -32,8 +32,8 @@ class CollectionNamingConfusion extends SemanticRule("CollectionNamingConfusion"
 
     doc.tree.collect {
       // Corresponds to vals / vars of collection types that have a confusing name (i.e. of another collection) e.g. val set = List(1,2,3) or var listSet =
-      case t@Defn.Val(_, List(Pat.Var(Term.Name(qual))), _, Term.Apply.After_4_6_0(Term.Name(collName), _)) if leaveOneOut(collName.toLowerCase()).exists(qual.contains) => Patch.lint(diag(t.pos))
-      case t@Defn.Var.After_4_7_2(_, List(Pat.Var(Term.Name(qual))), _, Term.Apply.After_4_6_0(Term.Name(collName), _)) if leaveOneOut(collName.toLowerCase()).exists(qual.contains) => Patch.lint(diag(t.pos))
+      case t @ Defn.Val(_, List(Pat.Var(Term.Name(qual))), _, Term.Apply.After_4_6_0(Term.Name(collName), _)) if leaveOneOut(collName.toLowerCase()).exists(qual.contains)             => Patch.lint(diag(t.pos))
+      case t @ Defn.Var.After_4_7_2(_, List(Pat.Var(Term.Name(qual))), _, Term.Apply.After_4_6_0(Term.Name(collName), _)) if leaveOneOut(collName.toLowerCase()).exists(qual.contains) => Patch.lint(diag(t.pos))
     }.asPatch
   }
 

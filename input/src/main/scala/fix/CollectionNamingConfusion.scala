@@ -8,11 +8,11 @@ object CollectionNamingConfusion {
 
     // Incorrect names
     val list = Set(1, 2, 3) // assert: CollectionNamingConfusion
-    val set = List(1,2,3) // assert: CollectionNamingConfusion
-    val vector = Seq(1,2,3) // assert: CollectionNamingConfusion
-    val seq = Vector(1,2,3) // assert: CollectionNamingConfusion
+    val set = List(1, 2, 3) // assert: CollectionNamingConfusion
+    val vector = Seq(1, 2, 3) // assert: CollectionNamingConfusion
+    val seq = Vector(1, 2, 3) // assert: CollectionNamingConfusion
     val array = Map(1 -> "one", 2 -> "two") // assert: CollectionNamingConfusion
-    val map = Array(1,2,3) // assert: CollectionNamingConfusion
+    val map = Array(1, 2, 3) // assert: CollectionNamingConfusion
 
     // Longer incorrect names
     val listSet = Set(1, 2, 3) // assert: CollectionNamingConfusion
