@@ -60,3 +60,4 @@ fix.BooleanParameter
 fix.BoundedByFinalType
 fix.BrokenOddness
 fix.ClassNames
+fix.CollectionNamingConfusion
