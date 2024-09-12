@@ -57,3 +57,4 @@ fix.AvoidToMinusOne
 fix.BigDecimalDoubleConstructor
 fix.BigDecimalScaleWithoutRoundingMode
 fix.BooleanParameter
+fix.BoundedByFinalType
