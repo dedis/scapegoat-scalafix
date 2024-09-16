@@ -20,15 +20,18 @@ class ExistsSimplifiableToContains extends SemanticRule("ExistsSimplifiableToCon
 
   override def fix(implicit doc: SemanticDocument): Patch = {
 
-    // Ranges are respectively for until and to, we also handle varargs
+    // Array, seq, list, set, map, vector, range, varargs implement the contains method
+    // Ranges are respectively for until and to
     def isContainsTraversable(term: Term) = Util.isArray(term) || Util.isSeq(term) || Util.isList(term) || Util.isSet(term) || Util.isMap(term) || Util.isVector(term) || Util.matchType(term, "scala/collection/immutable/Range", "scala/collection/immutable/Range.Inclusive") || Util.isVarArgs(term)
     def isUsedOnce(other: Tree, vari: String) = !other.collect { case Term.Name(n) => n == vari }.contains(true)
 
+    // Handle normal function (with variable)
     def ruleNotAnonymous(var1: String, lhs: Term, rhs: Term.ArgClause, t: Term): Patch = {
+      // We check if one of the two sides is the variable, and if it is used only once i.e. not in the other side, as otherwise contains is not sufficient
       (lhs, rhs) match {
         case (Term.Name(var2), other) if var1 == var2 && isUsedOnce(other, var2)                          => Patch.lint(diag(t.pos))
         case (other, Term.ArgClause(List(Term.Name(var2)), _)) if var1 == var2 && isUsedOnce(other, var2) => Patch.lint(diag(t.pos))
-        // Ignore calls to _.1 or ._2 for maps
+        // Ignore calls to _.1 or ._2 for maps as contains would not be sufficient
         case (Term.Select(Term.Name(_), Term.Name("_1" | "_2")), _)                                                       => Patch.empty
         case (Term.Select(Term.Name(var2), _), other) if var1 == var2 && isUsedOnce(other, var2)                          => Patch.lint(diag(t.pos))
         case (other, Term.ArgClause(List(Term.Select(Term.Name(var2), _)), _)) if var1 == var2 && isUsedOnce(other, var2) => Patch.lint(diag(t.pos))
@@ -36,9 +39,10 @@ class ExistsSimplifiableToContains extends SemanticRule("ExistsSimplifiableToCon
       }
     }
 
+    // Handle anonymous function (with placeholders)
     def ruleAnonymous(lhs: Term, rhs: Term.ArgClause, t: Term): Patch = {
       (lhs, rhs) match {
-        // Same as above
+        // Here the placeholder is necessarily used one, no need for the check, we simply check for _.1 or _.2 for maps
         case (Term.Select(Term.Placeholder(), Term.Name("_1" | "_2")), _)                          => Patch.empty
         case (Term.Placeholder() | Term.Select(Term.Placeholder(), _), _)                          => Patch.lint(diag(t.pos))
         case (_, Term.ArgClause(List(Term.Placeholder() | Term.Select(Term.Placeholder(), _)), _)) => Patch.lint(diag(t.pos))
@@ -60,8 +64,6 @@ class ExistsSimplifiableToContains extends SemanticRule("ExistsSimplifiableToCon
           case Term.AnonymousFunction(Term.ApplyInfix.After_4_6_0(lhs, Term.Name("==" | "!="), _, rhs))                                                                     => ruleAnonymous(lhs, rhs, t)
           case _                                                                                                                                                            => Patch.empty
         }
-      // We check that we are doing a comparison of the type x == y or y == x with x the variable, i.e. at least one of (lhs, rhs) needs to be the parameter
-
     }.asPatch
   }
 
