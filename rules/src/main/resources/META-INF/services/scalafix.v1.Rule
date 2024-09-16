@@ -76,3 +76,5 @@ fix.FilterOptionAndGet
 fix.FinalModifierOnCaseClass
 fix.FindAndNotEqualsNoneReplaceWithExists
 fix.FindDotIsDefined
+fix.InvalidRegexTest
+fix.IsInstanceOf
