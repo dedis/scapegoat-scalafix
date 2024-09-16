@@ -74,3 +74,5 @@ fix.FilterDotHeadOption
 fix.FilterDotIsEmpty
 fix.FilterOptionAndGet
 fix.FinalModifierOnCaseClass
+fix.FindAndNotEqualsNoneReplaceWithExists
+fix.FindDotIsDefined
