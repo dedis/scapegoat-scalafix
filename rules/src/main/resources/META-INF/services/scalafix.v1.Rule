@@ -68,3 +68,4 @@ fix.UnusedMethodParameter
 fix.VarCouldBeVal
 fix.VariableShadowing
 fix.WhileTrue
+fix.ExistsSimplifiableToContains
