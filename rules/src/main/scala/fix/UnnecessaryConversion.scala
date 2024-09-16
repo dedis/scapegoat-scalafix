@@ -45,14 +45,14 @@ class UnnecessaryConversion extends SemanticRule("UnnecessaryConversion") {
       case t @ Term.Select(name @ Term.Name(_), Term.Name("toDouble")) if Util.matchType(name, "scala/Double") => Patch.lint(diag(t.pos))
 
       // Predef.Set corresponds to Set(_) in Scala, same for Map
-      case t @ Term.Select(qual, Term.Name("toSet")) if Util.matchType(qual, "scala/collection/immutable/Set", "scala/collection/mutable/Set", "scala/Predef.Set") => Patch.lint(diag(t.pos))
-      case t @ Term.Select(qual, Term.Name("toMap")) if Util.matchType(qual, "scala/collection/immutable/Map", "scala/collection/mutable/Map", "scala/Predef.Map") => Patch.lint(diag(t.pos))
+      case t @ Term.Select(qual, Term.Name("toSet")) if Util.isSet(qual) => Patch.lint(diag(t.pos))
+      case t @ Term.Select(qual, Term.Name("toMap")) if Util.isMap(qual) => Patch.lint(diag(t.pos))
       // package.List corresponds to List(_) in Scala, same for Seq and Vector
-      case t @ Term.Select(qual, Term.Name("toList")) if Util.matchType(qual, "scala/collection/immutable/List", "scala/package.List")                              => Patch.lint(diag(t.pos))
-      case t @ Term.Select(qual, Term.Name("toSeq")) if Util.matchType(qual, "scala/collection/immutable/Seq", "scala/collection/mutable/Seq", "scala/package.Seq") => Patch.lint(diag(t.pos))
-      case t @ Term.Select(qual, Term.Name("toVector")) if Util.matchType(qual, "scala/collection/immutable/Vector", "scala/package.Vector")                        => Patch.lint(diag(t.pos))
-      case t @ Term.Select(qual, Term.Name("toArray")) if Util.matchType(qual, "scala/Array", "scala/Array.empty")                                                  => Patch.lint(diag(t.pos))
-      case _                                                                                                                                                        => Patch.empty
+      case t @ Term.Select(qual, Term.Name("toList")) if Util.isList(qual)     => Patch.lint(diag(t.pos))
+      case t @ Term.Select(qual, Term.Name("toSeq")) if Util.isSeq(qual)       => Patch.lint(diag(t.pos))
+      case t @ Term.Select(qual, Term.Name("toVector")) if Util.isVector(qual) => Patch.lint(diag(t.pos))
+      case t @ Term.Select(qual, Term.Name("toArray")) if Util.isArray(qual)   => Patch.lint(diag(t.pos))
+      case _                                                                   => Patch.empty
     }.asPatch
   }
 }
