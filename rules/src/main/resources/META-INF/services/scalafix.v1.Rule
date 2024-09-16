@@ -69,3 +69,7 @@ fix.VarCouldBeVal
 fix.VariableShadowing
 fix.WhileTrue
 fix.ExistsSimplifiableToContains
+fix.FilterDotHead
+fix.FilterDotHeadOption
+fix.FilterDotIsEmpty
+fix.FilterOptionAndGet
