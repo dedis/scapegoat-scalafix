@@ -32,11 +32,9 @@ object Util {
   def isVarArgs(term: Stat)(implicit doc: SemanticDocument): Boolean = {
     term.symbol.info.exists(_.signature match {
       case ValueSignature(RepeatedType(_)) => true
-      case _ => false
-    }
-    )
+      case _                               => false
+    })
   }
-
 
   /** Compare the type of a term with the passed symbols
     * @param term
