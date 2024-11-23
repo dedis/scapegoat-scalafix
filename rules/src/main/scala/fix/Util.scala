@@ -29,6 +29,13 @@ object Util {
     }
   }
 
+  def isVarArgs(term: Stat)(implicit doc: SemanticDocument): Boolean = {
+    term.symbol.info.exists(_.signature match {
+      case ValueSignature(RepeatedType(_)) => true
+      case _                               => false
+    })
+  }
+
   /** Compare the type of a term with the passed symbols
     * @param term
     *   The term to compare
@@ -219,5 +226,12 @@ object Util {
       case _              => Symbol.None
     }
   }
+
+  def isSet(term: Term)(implicit doc: SemanticDocument): Boolean = Util.matchType(term, "scala/collection/immutable/Set", "scala/collection/mutable/Set", "scala/Predef.Set")
+  def isMap(term: Term)(implicit doc: SemanticDocument): Boolean = Util.matchType(term, "scala/collection/immutable/Map", "scala/collection/mutable/Map", "scala/Predef.Map")
+  def isSeq(term: Term)(implicit doc: SemanticDocument): Boolean = Util.matchType(term, "scala/collection/immutable/Seq", "scala/collection/mutable/Seq", "scala/package.Seq")
+  def isList(term: Term)(implicit doc: SemanticDocument): Boolean = Util.matchType(term, "scala/collection/immutable/List", "scala/package.List")
+  def isVector(term: Term)(implicit doc: SemanticDocument): Boolean = Util.matchType(term, "scala/collection/immutable/Vector", "scala/package.Vector")
+  def isArray(term: Term)(implicit doc: SemanticDocument): Boolean = Util.matchType(term, "scala/Array")
 
 }

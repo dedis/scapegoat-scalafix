@@ -1,13 +1,12 @@
 /*
-rule = AsInstanceOf
+rule = IsInstanceOf
  */
 package fix
 
-object AsInstanceOf {
-
+object IsInstanceOf {
   def test(): Unit = {
     val s: Any = "sammy"
-    println(s.asInstanceOf[String]) // assert: AsInstanceOf
+    println(s.isInstanceOf[String]) // assert: IsInstanceOf
 
     case class MappingCharFilter(name: String, mappings: (String, String)*) // scalafix: ok;
 
@@ -20,17 +19,14 @@ object AsInstanceOf {
     @SuppressWarnings(Array("all"))
     def hello: Unit = {
       val s: Any = "sammy"
-      println(s.asInstanceOf[String]) // scalafix: ok;
+      println(s.isInstanceOf[String]) // scalafix: ok;
     }
 
-    @SuppressWarnings(Array("AsInstanceOf"))
+    @SuppressWarnings(Array("IsInstanceOf"))
     def hello2: Unit = {
       val s: Any = "sammy"
-      println(s.asInstanceOf[String]) // scalafix: ok;
+      println(s.isInstanceOf[String]) // scalafix: ok;
     }
-
-    @SuppressWarnings(Array("AsInstanceOf"))
-    val mf = manifest[Class[_]] // scalafix: ok;
 
     sealed trait MyGADT[T]
     final case class VariantInt(value: Int) extends MyGADT[Int]
