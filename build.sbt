@@ -8,12 +8,12 @@ inThisBuild(
     organizationName := "dedis",
     organizationHomepage := Some(url("https://dedis.epfl.ch")),
     homepage := Some(url("https://github.com/dedis/scapegoat-scalafix")),
-    licenses := List("AGPL 3.0" -> url("https://www.gnu.org/licenses/agpl-3.0.en.html")),
+    licenses := List("GPL 3.0" -> url("https://www.gnu.org/licenses/gpl-3.0.en.html")),
     developers := List(Developer("t1b00", "Thibault Czarniak", "thibault.czarniak@epfl.ch", url("https://www.linkedin.com/in/thcz/"))),
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
     scmInfo := Some(ScmInfo(url("https://github.com/dedis/scapegoat-scalafix"), "scm:git@github.com:dedis/scapegoat-scalafix.git")),
-    version := "1.1.3",
+    version := "1.1.4",
     versionScheme := Some("pvp")
   )
 )

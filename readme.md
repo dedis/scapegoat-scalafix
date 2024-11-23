@@ -13,7 +13,7 @@
 ## Description
 This project is a Scalafix implementation of the Scapegoat linter for Scala 3. It contains a set of rules that can be run on Scala code to detect potential issues and bad practices. The rules are based on the Scapegoat linter for Scala 2, but have been adapted to work with Scalafix and Scala 3.
 
-For now, **this project has 70 rules** but more are being worked on.
+For now, **this project has 81 rules** but more are being worked on.
 You can track the progress [here](https://docs.google.com/spreadsheets/d/1XovJJg3EInQFFL1-tpqGxpP2O4RFzCOF7zDalQIeB7E/edit?usp=sharing).
 
 ## Installation
@@ -26,7 +26,7 @@ addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.12.1")
 
 Then, to obtain this rule set, simply add the following line to your `build.sbt` file:
 ```
-ThisBuild / scalafixDependencies += "io.github.dedis" %% "scapegoat-scalafix" % "1.1.3"
+ThisBuild / scalafixDependencies += "io.github.dedis" %% "scapegoat-scalafix" % "1.1.4"
 ```
 
 **The rules are compatible with Scala 2.13 and Scala 3 (tested for Scala 3.3.1).**
@@ -47,78 +47,89 @@ inThisBuild(
 This is necessary to enable the SemanticDB, which is required for the rules to work. Only add these lines if SemanticDB is not already enabled in the `build.sbt`.
 
 ## Rule list
-| Name                               |Brief Description                                                                                                                        |Default Level|
-|------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------|-------------|
-| ArrayEquals                        |Checks for comparison of arrays using `==` which will always return false                                                                |Info         |
-| ArraysInFormat                     |Checks for arrays passed to String.format                                                                                                |Error        |
-| ArraysToString                     |Checks for explicit toString calls on arrays                                                                                             |Warning      |
-| AsInstanceOf                       |Checks for use of `asInstanceOf`                                                                                                         |Warning      |
-| AvoidSizeEqualsZero                |Traversable.size can be slow for some data structure, prefer .isEmpty                                                                    |Warning      |
-| AvoidSizeNotEqualsZero             |Traversable.size can be slow for some data structure, prefer .nonEmpty                                                                   |Warning      |
-| AvoidToMinusOne                    |Checks for loops that use `x to n-1` instead of `x until n`                                                                              |Info         |
-| BigDecimalDoubleConstructor        |Checks for use of `BigDecimal(double)` which can be unsafe                                                                               |Warning      |
-| BigDecimalScaleWithoutRoundingMode |`setScale()` on a `BigDecimal` without setting the rounding mode can throw an exception                                                  |Warning      |
-| BooleanParameter                   |Checks for functions that have a Boolean parameter                                                                                       |Info         |
-| BoundedByFinalType                 |Looks for types with upper bounds of a final type                                                                                        |Warning      |
-| BrokenOddness                      |Checks for a % 2 == 1 for oddness because this fails on negative numbers                                                                 |Warning      |
-| CatchException                     |Checks for try blocks that catch Exception                                                                                               |Warning      |
-| CatchExceptionImmediatelyRethrown  |Checks for try-catch blocks that immediately rethrow caught exceptions.                                                                  |Warning      |
-| CatchFatal                         |Checks for try blocks that catch fatal exceptions: VirtualMachineError, ThreadDeath, InterruptedException, LinkageError, ControlThrowable|Warning      |
-| CatchNpe                           |Checks for try blocks that catch null pointer exceptions                                                                                 |Error        |
-| CatchThrowable                     |Checks for try blocks that catch Throwable                                                                                               |Warning      |
-| ClassNames                         |Ensures class names adhere to the style guidelines                                                                                       |Info         |
-| CollectionIndexOnNonIndexedSeq     |Checks for indexing on a Seq which is not an IndexedSeq                                                                                  |Warning      |
-| CollectionNamingConfusion          |Checks for variables that are confusingly named                                                                                          |Info         |
-| CollectionNegativeIndex            |Checks for negative access on a sequence eg `list.get(-1)`                                                                               |Warning      |
-| CollectionPromotionToAny           |Checks for collection operations that promote the collection to `Any`                                                                    |Warning      |
-| ComparingFloatingPointTypes        |Checks for equality checks on floating point types                                                                                       |Error        |
-| ComparisonToEmptyList              |Checks for code like `a == List()` or `a == Nil`                                                                                         |Info         |
-| ComparisonToEmptySet               |Checks for code like `a == Set()` or `a == Set.empty`                                                                                    |Info         |
-| ComparisonWithSelf                 |Checks for equality checks with itself                                                                                                   |Warning      |
-| ConstantIf                         |Checks for code where the if condition compiles to a constant                                                                            |Warning      |
-| DivideByOne                        |Checks for divide by one, which always returns the original value                                                                        |Warning      |
-| DoubleNegation                     |Checks for code like `!(!b)`                                                                                                             |Info         |
-| DuplicateImport                    |Checks for import statements that import the same selector                                                                               |Info         |
-| DuplicateMapKey                    |Checks for duplicate key names in Map literals                                                                                           |Warning      |
-| DuplicateSetValue                  |Checks for duplicate values in set literals                                                                                              |Warning      |
-| EitherGet                          |Checks for use of .get on Left or Right                                                                                                  |Error        |
-| EmptyCaseClass                     |Checks for case classes like `case class Faceman()`                                                                                      |Info         |
-| EmptyFor                           |Checks for empty `for` loops                                                                                                             |Warning      |
-| EmptyIfBlock                       |Checks for empty `if` blocks                                                                                                             |Warning      |
-| EmptyInterpolatedString            |Looks for interpolated strings that have no arguments                                                                                    |Error        |
-| EmptyMethod                        |Looks for empty methods                                                                                                                  |Warning      |
-| EmptySynchronizedBlock             |Looks for empty synchronized blocks                                                                                                      |Warning      |
-| EmptyTryBlock                      |Looks for empty try blocks                                                                                                               |Warning      |
-| EmptyWhileBlock                    |Looks for empty while loops                                                                                                              |Warning      |
-| FinalizerWithoutSuper              |Checks for overridden finalizers that do not call super                                                                                  |Warning      |
-| IllegalFormatString                |Looks for invalid format strings                                                                                                         |Error        |
-| ImpossibleOptionSizeCondition      |Checks for code like `option.size > 2` which can never be true                                                                           |Error        |
-| IncorrectNumberOfArgsToFormat      |Checks for wrong number of arguments to `String.format`                                                                                  |Error        |
-| IncorrectlyNamedExceptions         |Checks for exceptions that are not called *Exception and vice versa                                                                      |Error        |
-| InterpolationToString              |Checks for string interpolations that have .toString in their arguments                                                                  |Warning      |
-| LonelySealedTrait                  |Checks for sealed traits which have no implementation                                                                                    |Error        |
-| LooksLikeInterpolatedString        |Finds strings that look like they should be interpolated but are not                                                                     |Warning      |
-| MapGetAndGetOrElse                 |`Map.get(key).getOrElse(value)` can be replaced with `Map.getOrElse(key, value)`                                                         |Error        |
-| MethodReturningAny                 |Checks for defs that are defined or inferred to return `Any`                                                                             |Warning      |
-| NanComparison                      |Checks for `x == Double.NaN` which will always fail                                                                                      |Error        |
-| NullAssignment                     |Checks for use of `null` in assignments                                                                                                  |Warning      |
-| NullParameter                      |Checks for use of `null` in method invocation                                                                                            |Warning      |
-| OptionGet                          |Checks for `Option.get`                                                                                                                  |Error        |
-| OptionSize                         |Checks for `Option.size`                                                                                                                 |Error        |
-| RepeatedCaseBody                   |Checks for case statements which have the same body                                                                                      |Warning      |
-| RepeatedIfElseBody                 |Checks for the main branch and the else branch of an `if` being the same                                                                 |Warning      |
-| StripMarginOnRegex                 |Checks for .stripMargin on regex strings that contain a pipe                                                                             |Error        |
-| SwallowedException                 |Finds catch blocks that don't handle caught exceptions                                                                                   |Warning      |
-| TryGet                             |Checks for use of `Try.get`                                                                                                              |Error        |
-| UnnecessaryConversion              |Checks for unnecessary `toInt` on instances of Int or `toString` on Strings, etc.                                                        |Warning      |
-| UnreachableCatch                   |Checks for catch clauses that cannot be reached                                                                                          |Warning      |
-| UnsafeContains                     |Checks for `List.contains(value)` for invalid types                                                                                      |Error        |
-| UnsafeStringContains               |Checks for `String.contains(value)` for invalid types                                                                                    |Error        |
-| UnsafeTraversableMethods           |Check unsafe traversable method usages (head, tail, init, last, reduce, reduceLeft, reduceRight, max, maxBy, min, minBy)                 |Error        |
-| UnusedMethodParameter              |Checks for unused method parameters                                                                                                      |Warning      |
-| VarCouldBeVal                      |Checks for `var`s that could be declared as `val`s                                                                                       |Warning      |
-| VariableShadowing                  |Checks for multiple uses of the variable name in nested scopes                                                                           |Warning      |
-| WhileTrue                          |Checks for code that uses a `while(true)` or `do { } while(true)` block.                                                                 |Warning      |
+| Name                                  | Brief Description                                                                                                                         | Default Level |
+|---------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| ArrayEquals                           | Checks for comparison of arrays using `==` which will always return false                                                                 | Info          |
+| ArraysInFormat                        | Checks for arrays passed to String.format                                                                                                 | Error         |
+| ArraysToString                        | Checks for explicit toString calls on arrays                                                                                              | Warning       |
+| AsInstanceOf                          | Checks for use of `asInstanceOf`                                                                                                          | Warning       |
+| AvoidSizeEqualsZero                   | Traversable.size can be slow for some data structure, prefer .isEmpty                                                                     | Warning       |
+| AvoidSizeNotEqualsZero                | Traversable.size can be slow for some data structure, prefer .nonEmpty                                                                    | Warning       |
+| AvoidToMinusOne                       | Checks for loops that use `x to n-1` instead of `x until n`                                                                               | Info          |
+| BigDecimalDoubleConstructor           | Checks for use of `BigDecimal(double)` which can be unsafe                                                                                | Warning       |
+| BigDecimalScaleWithoutRoundingMode    | `setScale()` on a `BigDecimal` without setting the rounding mode can throw an exception                                                   | Warning       |
+| BooleanParameter                      | Checks for functions that have a Boolean parameter                                                                                        | Info          |
+| BoundedByFinalType                    | Looks for types with upper bounds of a final type                                                                                         | Warning       |
+| BrokenOddness                         | Checks for a % 2 == 1 for oddness because this fails on negative numbers                                                                  | Warning       |
+| CatchException                        | Checks for try blocks that catch Exception                                                                                                | Warning       |
+| CatchExceptionImmediatelyRethrown     | Checks for try-catch blocks that immediately rethrow caught exceptions.                                                                   | Warning       |
+| CatchFatal                            | Checks for try blocks that catch fatal exceptions: VirtualMachineError, ThreadDeath, InterruptedException, LinkageError, ControlThrowable | Warning       |
+| CatchNpe                              | Checks for try blocks that catch null pointer exceptions                                                                                  | Error         |
+| CatchThrowable                        | Checks for try blocks that catch Throwable                                                                                                | Warning       |
+| ClassNames                            | Ensures class names adhere to the style guidelines                                                                                        | Info          |
+| CollectionIndexOnNonIndexedSeq        | Checks for indexing on a Seq which is not an IndexedSeq                                                                                   | Warning       |
+| CollectionNamingConfusion             | Checks for variables that are confusingly named                                                                                           | Info          |
+| CollectionNegativeIndex               | Checks for negative access on a sequence eg `list.get(-1)`                                                                                | Warning       |
+| CollectionPromotionToAny              | Checks for collection operations that promote the collection to `Any`                                                                     | Warning       |
+| ComparingFloatingPointTypes           | Checks for equality checks on floating point types                                                                                        | Error         |
+| ComparisonToEmptyList                 | Checks for code like `a == List()` or `a == Nil`                                                                                          | Info          |
+| ComparisonToEmptySet                  | Checks for code like `a == Set()` or `a == Set.empty`                                                                                     | Info          |
+| ComparisonWithSelf                    | Checks for equality checks with itself                                                                                                    | Warning       |
+| ConstantIf                            | Checks for code where the if condition compiles to a constant                                                                             | Warning       |
+| DivideByOne                           | Checks for divide by one, which always returns the original value                                                                         | Warning       |
+| DoubleNegation                        | Checks for code like `!(!b)`                                                                                                              | Info          |
+| DuplicateImport                       | Checks for import statements that import the same selector                                                                                | Info          |
+| DuplicateMapKey                       | Checks for duplicate key names in Map literals                                                                                            | Warning       |
+| DuplicateSetValue                     | Checks for duplicate values in set literals                                                                                               | Warning       |
+| EitherGet                             | Checks for use of .get on Left or Right                                                                                                   | Error         |
+| EmptyCaseClass                        | Checks for case classes like `case class Faceman()`                                                                                       | Info          |
+| EmptyFor                              | Checks for empty `for` loops                                                                                                              | Warning       |
+| EmptyIfBlock                          | Checks for empty `if` blocks                                                                                                              | Warning       |
+| EmptyInterpolatedString               | Looks for interpolated strings that have no arguments                                                                                     | Error         |
+| EmptyMethod                           | Looks for empty methods                                                                                                                   | Warning       |
+| EmptySynchronizedBlock                | Looks for empty synchronized blocks                                                                                                       | Warning       |
+| EmptyTryBlock                         | Looks for empty try blocks                                                                                                                | Warning       |
+| EmptyWhileBlock                       | Looks for empty while loops                                                                                                               | Warning       |
+| ExistsSimplifiableToContains          | `exists(x => x == b)` replaceable with `contains(b)`                                                                                      | Info          |
+| FilterDotHead                         | `.filter(x => ).head` can be replaced with `find(x => ) match { .. } `                                                                    | Info          |
+| FilterDotHeadOption                   | `.filter(x =>).headOption` can be replaced with `find(x => )`                                                                             | Info          |
+| FilterDotIsEmpty                      | `.filter(x => ).isEmpty` can be replaced with `!exists(x => )`                                                                            | Info          |
+| FilterDotSize                         | `.filter(x => ).size` can be replaced more concisely with with `count(x => )`                                                             | Info          |
+| FilterOptionAndGet                    | `.filter(_.isDefined).map(_.get)` can be replaced with `flatten`                                                                          | Info          |
+| FinalModifierOnCaseClass              | Using Case classes without `final` modifier can lead to surprising breakage                                                               | Info          |
+| FinalizerWithoutSuper                 | Checks for overridden finalizers that do not call super                                                                                   | Warning       |
+| FindAndNotEqualsNoneReplaceWithExists | `.find(x => ) != None` can be replaced with `exists(x => )`                                                                               | Info          |
+| FindDotIsDefined                      | `find(x => ).isDefined` can be replaced with `exist(x => )`                                                                               | Info          |
+| IllegalFormatString                   | Looks for invalid format strings                                                                                                          | Error         |
+| ImpossibleOptionSizeCondition         | Checks for code like `option.size > 2` which can never be true                                                                            | Error         |
+| IncorrectNumberOfArgsToFormat         | Checks for wrong number of arguments to `String.format`                                                                                   | Error         |
+| IncorrectlyNamedExceptions            | Checks for exceptions that are not called *Exception and vice versa                                                                       | Error         |
+| InvalidRegex                          | Checks for invalid regex literals                                                                                                         | Info          |
+| IsInstanceOf                          | Checks for use of `isInstanceOf`                                                                                                          | Warning       |
+| InterpolationToString                 | Checks for string interpolations that have .toString in their arguments                                                                   | Warning       |
+| LonelySealedTrait                     | Checks for sealed traits which have no implementation                                                                                     | Error         |
+| LooksLikeInterpolatedString           | Finds strings that look like they should be interpolated but are not                                                                      | Warning       |
+| MapGetAndGetOrElse                    | `Map.get(key).getOrElse(value)` can be replaced with `Map.getOrElse(key, value)`                                                          | Error         |
+| MethodReturningAny                    | Checks for defs that are defined or inferred to return `Any`                                                                              | Warning       |
+| NanComparison                         | Checks for `x == Double.NaN` which will always fail                                                                                       | Error         |
+| NullAssignment                        | Checks for use of `null` in assignments                                                                                                   | Warning       |
+| NullParameter                         | Checks for use of `null` in method invocation                                                                                             | Warning       |
+| OptionGet                             | Checks for `Option.get`                                                                                                                   | Error         |
+| OptionSize                            | Checks for `Option.size`                                                                                                                  | Error         |
+| RepeatedCaseBody                      | Checks for case statements which have the same body                                                                                       | Warning       |
+| RepeatedIfElseBody                    | Checks for the main branch and the else branch of an `if` being the same                                                                  | Warning       |
+| StripMarginOnRegex                    | Checks for .stripMargin on regex strings that contain a pipe                                                                              | Error         |
+| SwallowedException                    | Finds catch blocks that don't handle caught exceptions                                                                                    | Warning       |
+| TryGet                                | Checks for use of `Try.get`                                                                                                               | Error         |
+| UnnecessaryConversion                 | Checks for unnecessary `toInt` on instances of Int or `toString` on Strings, etc.                                                         | Warning       |
+| UnreachableCatch                      | Checks for catch clauses that cannot be reached                                                                                           | Warning       |
+| UnsafeContains                        | Checks for `List.contains(value)` for invalid types                                                                                       | Error         |
+| UnsafeStringContains                  | Checks for `String.contains(value)` for invalid types                                                                                     | Error         |
+| UnsafeTraversableMethods              | Check unsafe traversable method usages (head, tail, init, last, reduce, reduceLeft, reduceRight, max, maxBy, min, minBy)                  | Error         |
+| UnusedMethodParameter                 | Checks for unused method parameters                                                                                                       | Warning       |
+| VarCouldBeVal                         | Checks for `var`s that could be declared as `val`s                                                                                        | Warning       |
+| VariableShadowing                     | Checks for multiple uses of the variable name in nested scopes                                                                            | Warning       |
+| WhileTrue                             | Checks for code that uses a `while(true)` or `do { } while(true)` block.                                                                  | Warning       |
 
 
 ## Usage
@@ -172,12 +183,23 @@ rules = [
     EmptySynchronizedBlock,
     EmptyTryBlock,
     EmptyWhileBlock,
+    ExistsSimplifiableToContains,
+    FilterDotHead,
+    FilterDotHeadOption,
+    FilterDotIsEmpty,
+    FilterDotSize,
+    FilterOptionAndGet,
+    FinalModifierOnCaseClass,
     FinalizerWithoutSuper,
+    FindAndNotEqualsNoneReplaceWithExists,
+    FindDotIsDefined,
     IllegalFormatString,
     ImpossibleOptionSizeCondition,
     IncorrectNumberOfArgsToFormat,
     IncorrectlyNamedExceptions,
     InterpolationToString,
+    InvalidRegexTest,
+    IsInstanceOf,
     LonelySealedTrait,
     LooksLikeInterpolatedString,
     MapGetAndGetOrElse,
