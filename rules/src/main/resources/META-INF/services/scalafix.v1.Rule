@@ -80,3 +80,4 @@ fix.VarCouldBeVal
 fix.VariableShadowing
 fix.WhileTrue
 fix.ModOne
+fix.ParameterlessMethodReturnsUnit

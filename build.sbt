@@ -20,7 +20,7 @@ inThisBuild(
 
 scalacOptions ++= Seq(
   "-Yrangepos",
-  "-P:semanticdb:synthetics:on",
+  "-P:semanticdb:synthetics:on"
 )
 
 lazy val `scapegoat-scalafix` = (project in file("."))
