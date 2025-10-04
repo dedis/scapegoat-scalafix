@@ -81,3 +81,4 @@ fix.VariableShadowing
 fix.WhileTrue
 fix.ModOne
 fix.ParameterlessMethodReturnsUnit
+fix.PointlessTypeBounds
