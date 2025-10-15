@@ -82,3 +82,4 @@ fix.WhileTrue
 fix.ModOne
 fix.ParameterlessMethodReturnsUnit
 fix.PointlessTypeBounds
+fix.SuspiciousMatchOnClassObject
